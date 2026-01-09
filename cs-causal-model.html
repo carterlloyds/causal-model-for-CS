@@ -1,0 +1,1750 @@
+<!-- graph model editor -->
+<style>
+    /* Hard encapsulation: everything inside #causal-editor */
+    #causal-editor,
+    #causal-editor * {
+        box-sizing: border-box !important;
+        font-family: Arial, sans-serif !important;
+    }
+
+    #causal-editor {
+        height: 80vh !important;
+        width: 100% !important;
+        background: #ffffff !important;
+        color: #111111 !important;
+    }
+
+    #causal-editor a {
+        color: #0056B3 !important;
+        text-decoration: none !important;
+    }
+
+    #causal-editor a:hover {
+        text-decoration: underline !important;
+    }
+
+    #causal-editor #app {
+        display: flex !important;
+        height: 100% !important;
+        width: 100% !important;
+    }
+
+    #causal-editor #sidebar {
+        width: 340px !important;
+        min-width: 260px !important;
+        max-width: 440px !important;
+        border-right: 1px solid #dddddd !important;
+        background: #f7f7f7 !important;
+        padding: 12px !important;
+        overflow-y: auto !important;
+    }
+
+    #causal-editor #main {
+        flex: 1 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 8px !important;
+        background: #ffffff !important;
+    }
+
+    #causal-editor #network {
+        flex: 1 !important;
+        min-height: 400px !important;
+        border: 1px solid #cccccc !important;
+        background: #ffffff !important;
+    }
+
+    #causal-editor h1,
+    #causal-editor h2,
+    #causal-editor h3,
+    #causal-editor h4,
+    #causal-editor h5,
+    #causal-editor h6 {
+        margin-top: 0 !important;
+        margin-bottom: 6px !important;
+        font-weight: 600 !important;
+        color: #111111 !important;
+    }
+
+    #causal-editor h2 {
+        font-size: 18px !important;
+    }
+
+    #causal-editor h3 {
+        font-size: 14px !important;
+        border-bottom: 1px solid #dddddd !important;
+        padding-bottom: 2px !important;
+    }
+
+    #causal-editor label {
+        font-size: 12px !important;
+        display: block !important;
+        margin-bottom: 3px !important;
+        color: #333333 !important;
+    }
+
+    #causal-editor input[type="text"],
+    #causal-editor input[type="file"],
+    #causal-editor select,
+    #causal-editor textarea {
+        width: 100% !important;
+        font-size: 12px !important;
+        padding: 4px 6px !important;
+        margin-bottom: 8px !important;
+        border-radius: 3px !important;
+        border: 1px solid #cccccc !important;
+        background: #ffffff !important;
+        color: #111111 !important;
+        box-shadow: none !important;
+        outline: none !important;
+    }
+
+    #causal-editor input[type="file"] {
+        padding: 2px !important;
+    }
+
+    #causal-editor textarea {
+        resize: vertical !important;
+    }
+
+    #causal-editor button {
+        font-size: 12px !important;
+        padding: 5px 8px !important;
+        margin: 2px 0 !important;
+        border-radius: 4px !important;
+        border: 1px solid #999999 !important;
+        background: #ffffff !important;
+        color: #111111 !important;
+        cursor: pointer !important;
+        box-shadow: none !important;
+        display: inline-block !important;
+        line-height: 1.3 !important;
+    }
+
+    #causal-editor button.primary {
+        background: #0056B3 !important;
+        color: #ffffff !important;
+        border-color: #00408a !important;
+    }
+
+    #causal-editor button.danger {
+        background: #c0392b !important;
+        color: #ffffff !important;
+        border-color: #a5281b !important;
+    }
+
+    #causal-editor button:disabled {
+        opacity: 0.5 !important;
+        cursor: default !important;
+    }
+
+    #causal-editor .button-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+        margin-bottom: 8px !important;
+    }
+
+    #causal-editor .small {
+        font-size: 11px !important;
+        color: #555555 !important;
+    }
+
+    #causal-editor .inline-file {
+        font-size: 11px !important;
+        margin-bottom: 8px !important;
+    }
+
+    #causal-editor .tag-row {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 4px !important;
+        margin-bottom: 4px !important;
+    }
+
+    #causal-editor .tag {
+        padding: 4px 8px !important;
+        border-radius: 999px !important;
+        font-size: 11px !important;
+        border: 2px solid #cccccc !important;
+        background: #ffffff !important;
+        color: #111111 !important;
+        white-space: nowrap !important;
+    }
+
+    #causal-editor .section {
+        margin-bottom: 12px !important;
+    }
+
+    #causal-editor #selectedNodeSummary {
+        font-size: 11px !important;
+        padding: 4px !important;
+        background: #eeeeee !important;
+        border-radius: 4px !important;
+        margin-bottom: 6px !important;
+    }
+
+    #causal-editor #exportText {
+        font-family: Menlo, Monaco, Consolas, "Courier New", monospace !important;
+        font-size: 11px !important;
+    }
+
+    #causal-editor .type-label {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        font-size: 12px !important;
+        margin-bottom: 2px !important;
+    }
+
+    #causal-editor .type-label input {
+        margin: 0 !important;
+        width: auto !important;
+    }
+
+    #causal-editor .filters {
+        margin-top: 4px !important;
+        margin-bottom: 4px !important;
+    }
+
+    #causal-editor #indeavor-logo {
+        max-width: 160px !important;
+        margin-bottom: 6px !important;
+        display: block !important;
+    }
+
+    #causal-editor .type-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin-bottom: 4px !important;
+        font-size: 12px !important;
+    }
+
+    #causal-editor .type-color-dot {
+        width: 12px !important;
+        height: 12px !important;
+        border-radius: 50% !important;
+        display: inline-block !important;
+    }
+
+    #causal-editor .type-delete-btn {
+        font-size: 10px !important;
+        padding: 2px 5px !important;
+        margin: 0 !important;
+    }
+
+    #causal-editor .help-btn {
+        font-size: 14px !important;
+        padding: 2px 8px !important;
+        border-radius: 50% !important;
+        margin-left: 8px !important;
+        vertical-align: middle !important;
+    }
+
+    #causal-editor .search-results {
+        position: absolute !important;
+        top: 100% !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: #ffffff !important;
+        border: 1px solid #cccccc !important;
+        border-top: none !important;
+        border-radius: 0 0 3px 3px !important;
+        max-height: 200px !important;
+        overflow-y: auto !important;
+        z-index: 100 !important;
+        display: none !important;
+    }
+
+    #causal-editor .search-results.active {
+        display: block !important;
+    }
+
+    #causal-editor .search-result-item {
+        padding: 6px 8px !important;
+        cursor: pointer !important;
+        font-size: 12px !important;
+        border-bottom: 1px solid #eeeeee !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+    }
+
+    #causal-editor .search-result-item:last-child {
+        border-bottom: none !important;
+    }
+
+    #causal-editor .search-result-item:hover,
+    #causal-editor .search-result-item.highlighted {
+        background: #f0f0f0 !important;
+    }
+
+    #causal-editor .search-result-dot {
+        width: 10px !important;
+        height: 10px !important;
+        border-radius: 50% !important;
+        flex-shrink: 0 !important;
+    }
+
+    #causal-editor .search-result-label {
+        flex: 1 !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+
+    #causal-editor .search-result-type {
+        font-size: 10px !important;
+        color: #888888 !important;
+        flex-shrink: 0 !important;
+    }
+
+    #causal-editor .modal-overlay {
+        display: none;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        background: rgba(0,0,0,0.5) !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 10000 !important;
+    }
+
+    #causal-editor .modal-overlay.visible {
+        display: flex !important;
+    }
+
+    #causal-editor .modal-content {
+        background: #ffffff !important;
+        padding: 20px !important;
+        border-radius: 8px !important;
+        max-width: 500px !important;
+        max-height: 80vh !important;
+        overflow-y: auto !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+    }
+
+    #causal-editor .modal-content h3 {
+        margin-top: 12px !important;
+        border-bottom: none !important;
+    }
+
+    #causal-editor .modal-content h3:first-child {
+        margin-top: 0 !important;
+    }
+
+    #causal-editor .modal-content ul {
+        margin: 8px 0 !important;
+        padding-left: 20px !important;
+    }
+
+    #causal-editor .modal-content li {
+        margin-bottom: 4px !important;
+        font-size: 12px !important;
+    }
+
+    #causal-editor .modal-content kbd {
+        background: #eeeeee !important;
+        border: 1px solid #cccccc !important;
+        border-radius: 3px !important;
+        padding: 1px 5px !important;
+        font-family: monospace !important;
+        font-size: 11px !important;
+    }
+
+    #causal-editor .modal-close {
+        float: right !important;
+        font-size: 20px !important;
+        border: none !important;
+        background: none !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        line-height: 1 !important;
+    }
+
+    @media (max-width: 900px) {
+        #causal-editor #app {
+            flex-direction: column !important;
+        }
+        #causal-editor #sidebar {
+            width: 100% !important;
+            max-height: 52vh !important;
+            border-right: none !important;
+            border-bottom: 1px solid #dddddd !important;
+        }
+        #causal-editor #main {
+            padding: 4px !important;
+        }
+    }
+</style>
+
+<div id="causal-editor">
+    <div id="app">
+        <div id="sidebar">
+            <img id="indeavor-logo" src="https://www.indeavor.com/wp-content/uploads/2024/09/indeavor-logo.svg" alt="Indeavor logo">
+            <h2>Graph Model Editor <button id="btnHelp" class="help-btn">?</button></h2>
+
+            <div id="typeLegend" class="tag-row">
+                <!-- Dynamic type legend will be rendered here -->
+            </div>
+
+            <!-- Find Node -->
+            <div class="section">
+                <label for="nodeSearch">Find Node</label>
+                <div style="position:relative;">
+                    <input type="text" id="nodeSearch" placeholder="Type to search..." autocomplete="off">
+                    <div id="searchResults" class="search-results"></div>
+                </div>
+            </div>
+
+            <!-- Import / Export CSV -->
+            <div class="section">
+                <h3>Import / Export CSV</h3>
+                <div class="inline-file">
+                    <label for="importNodesFile">Upload nodes.csv (Node,Type):</label>
+                    <input type="file" id="importNodesFile" accept=".csv,.txt">
+                </div>
+                <div class="inline-file">
+                    <label for="importEdgesFile">Upload edges.csv (Node 1,Node 2):</label>
+                    <input type="file" id="importEdgesFile" accept=".csv,.txt">
+                </div>
+                <div class="button-row">
+                    <button id="btnImportCSV" class="primary">Import CSV Files</button>
+                    <button id="btnClear">New / Clear Graph</button>
+                </div>
+                <div class="button-row">
+                    <button id="btnExportNodesCSV">Download nodes.csv</button>
+                    <button id="btnExportEdgesCSV">Download edges.csv</button>
+                </div>
+            </div>
+
+            <!-- Manage Types -->
+            <div class="section">
+                <h3>Manage Types</h3>
+                <div id="typeList">
+                    <!-- Dynamic type list will be rendered here -->
+                </div>
+                <label for="newTypeName">Add new type:</label>
+                <input type="text" id="newTypeName" placeholder="Type name...">
+                <div class="button-row">
+                    <button id="btnAddType" class="primary">Add Type</button>
+                </div>
+            </div>
+
+            <!-- Create Node -->
+            <div class="section">
+                <h3>Create Node</h3>
+                <label for="createNodeLabel">Label</label>
+                <input type="text" id="createNodeLabel" placeholder="New node label...">
+
+                <label for="createNodeType">Type</label>
+                <select id="createNodeType">
+                    <option value="">-- select type --</option>
+                </select>
+
+                <div class="button-row">
+                    <button id="btnAddNode" class="primary">Add Node</button>
+                </div>
+            </div>
+
+            <!-- Edit Node -->
+            <div class="section">
+                <h3>Edit Node</h3>
+                <div id="selectedNodeSummary">
+                    Selected node: <strong><span id="selectedNodeId">None</span></strong>
+                </div>
+
+                <label for="editNodeLabel">Label</label>
+                <input type="text" id="editNodeLabel" placeholder="Edit label of selected node...">
+
+                <label for="editNodeType">Type</label>
+                <select id="editNodeType">
+                    <option value="">-- select type --</option>
+                </select>
+
+                <div class="button-row">
+                    <button id="btnUpdateNode">Update Selected Node</button>
+                    <button id="btnDeleteNode" class="danger">Delete Selected Node</button>
+                </div>
+                <div class="small">
+                    Click a node in the graph to select it for editing.
+                </div>
+            </div>
+
+            <!-- Edge editor -->
+            <div class="section">
+                <h3>Edge Editor</h3>
+                <label for="edgeFrom">Node A</label>
+                <select id="edgeFrom">
+                    <option value="">-- select --</option>
+                </select>
+
+                <label for="edgeTo">Node B</label>
+                <select id="edgeTo">
+                    <option value="">-- select --</option>
+                </select>
+
+                <div class="button-row">
+                    <button id="btnAddEdge" class="primary">Add Edge</button>
+                    <button id="btnDeleteEdge" class="danger">Delete Edge</button>
+                </div>
+                <div class="small">
+                    Hold <strong>Shift</strong> and click two nodes to create an edge.<br>
+                    Hold <strong>Delete</strong> and click an edge to delete it.
+                </div>
+            </div>
+
+            <!-- View / Behavior -->
+            <div class="section">
+                <h3>View & Behavior</h3>
+
+                <div id="isolateSelectedSummary" class="small" style="margin-bottom:4px;">
+                    Selected for isolate: <strong><span id="isolateNodeDisplay">None</span></strong>
+                </div>
+
+                <div class="button-row">
+                    <button id="btnIsolate">Isolate Connected</button>
+                    <button id="btnShowAll">Show All</button>
+                </div>
+
+                <div id="filterContainer" class="filters">
+                    <!-- Dynamic type filters will be rendered here -->
+                    <label class="type-label">
+                        <input type="checkbox" id="onlyOrphans">
+                        Only Orphans (<span id="countOrphans">0</span>)
+                    </label>
+                </div>
+
+                <label for="sortMethod" class="small">Layout method:</label>
+                <select id="sortMethod">
+                    <option value="directed">Hierarchical (vis default)</option>
+                    <option value="alpha">Network (force-directed)</option>
+                </select>
+
+                <div class="small" style="margin-top:4px;">
+                    Orphans are nodes with no edges. They blink between their type color and white.
+                </div>
+            </div>
+        </div>
+
+        <div id="main">
+            <div id="network"></div>
+        </div>
+    </div>
+
+    <!-- Help Modal -->
+    <div id="helpModal" class="modal-overlay">
+        <div class="modal-content">
+            <button id="btnCloseHelp" class="modal-close">&times;</button>
+            <h3>How to Use</h3>
+            <p style="font-size:12px;">This tool lets you create and edit graph models with typed nodes and edges.</p>
+
+            <h3>Import / Export</h3>
+            <ul>
+                <li><strong>nodes.csv</strong>: Two columns - Node, Type</li>
+                <li><strong>edges.csv</strong>: Two columns - Node 1, Node 2</li>
+                <li>Upload both files and click "Import CSV Files"</li>
+                <li>Types are auto-detected and assigned colors</li>
+            </ul>
+
+            <h3>Find Node</h3>
+            <ul>
+                <li>Type in the search box to find nodes by name</li>
+                <li>Use <kbd>↑</kbd> <kbd>↓</kbd> arrows to navigate results</li>
+                <li>Press <kbd>Enter</kbd> to select and zoom to node</li>
+                <li>Press <kbd>Esc</kbd> to close results</li>
+            </ul>
+
+            <h3>Mouse Controls</h3>
+            <ul>
+                <li><strong>Click node</strong>: Select for editing</li>
+                <li><strong>Double-click node</strong>: Isolate connected component</li>
+                <li><strong>Double-click isolated node</strong>: Show all nodes</li>
+                <li><strong>Drag node</strong>: Reposition</li>
+                <li><strong>Scroll</strong>: Zoom in/out</li>
+                <li><strong>Drag background</strong>: Pan view</li>
+            </ul>
+
+            <h3>Keyboard + Mouse (Edges)</h3>
+            <ul>
+                <li><kbd>Shift</kbd> + <strong>click node</strong>: Start edge creation (node highlights)</li>
+                <li><kbd>Shift</kbd> + <strong>click second node</strong>: Complete edge</li>
+                <li><kbd>Shift</kbd> + <strong>click same node</strong>: Cancel edge creation</li>
+                <li><kbd>Delete</kbd> or <kbd>Backspace</kbd> + <strong>click edge</strong>: Delete edge</li>
+            </ul>
+
+            <h3>Managing Types</h3>
+            <ul>
+                <li>Types are created automatically on import</li>
+                <li>Add new types manually in "Manage Types" section</li>
+                <li>Delete types only if no nodes use them</li>
+                <li>Filter view by type using checkboxes</li>
+            </ul>
+
+            <h3>View Options</h3>
+            <ul>
+                <li><strong>Isolate Connected</strong>: Show only the selected node's connected component</li>
+                <li><strong>Show All</strong>: Reset to full graph view</li>
+                <li><strong>Only Orphans</strong>: Show nodes with no edges</li>
+                <li><strong>Layout</strong>: Switch between hierarchical and force-directed</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+<script>
+    // Color palette for auto-assigning colors to types
+    const COLOR_PALETTE = [
+        '#e74c3c', '#3498db', '#2ecc71', '#9b59b6', '#f39c12', '#1abc9c',
+        '#e91e63', '#00bcd4', '#8bc34a', '#ff5722', '#607d8b', '#795548',
+        '#673ab7', '#009688', '#ffc107', '#03a9f4', '#cddc39', '#ff9800'
+    ];
+
+    // Dynamic type storage: Map of typeName -> { color: string }
+    let nodeTypes = new Map();
+    let colorIndex = 0;
+
+    let nodesData = new vis.DataSet([]);
+    let edgesData = new vis.DataSet([]);
+
+    let networkNodes = null;
+    let networkEdges = null;
+    let network = null;
+
+    let selectedNodeId = null;
+    let isolatedNodeId = null;
+    let edgeCreationSourceId = null;
+    let deletePressed = false;
+
+    let isIsolated = false;
+    let isolateSet = null;
+
+    let currentSortMethod = 'alpha';
+
+    let viewFilters = {
+        onlyOrphans: false
+    };
+
+    let blinkInterval = null;
+    let blinkingIds = new Set();
+
+    let isDirty = false;
+
+    // Pending CSV files for import
+    let pendingNodesCSV = null;
+    let pendingEdgesCSV = null;
+
+    // --- Type Management ---
+
+    function getNextColor() {
+        const color = COLOR_PALETTE[colorIndex % COLOR_PALETTE.length];
+        colorIndex++;
+        return color;
+    }
+
+    function addType(name, color) {
+        if (!name || nodeTypes.has(name)) return false;
+        nodeTypes.set(name, { color: color || getNextColor() });
+        viewFilters[name] = true;
+        updateTypeUI();
+        return true;
+    }
+
+    function removeType(name) {
+        if (!nodeTypes.has(name)) return;
+        const nodesWithType = nodesData.get({ filter: function(n) { return n.type === name; } });
+        if (nodesWithType.length > 0) {
+            alert('Cannot delete type "' + name + '": ' + nodesWithType.length + ' node(s) are using it.');
+            return;
+        }
+        nodeTypes.delete(name);
+        delete viewFilters[name];
+        updateTypeUI();
+    }
+
+    function getTypeColor(typeName) {
+        if (nodeTypes.has(typeName)) {
+            return nodeTypes.get(typeName).color;
+        }
+        return '#999999';
+    }
+
+    function updateTypeUI() {
+        // Update legend
+        const legendEl = document.querySelector('#causal-editor #typeLegend');
+        legendEl.innerHTML = '';
+        nodeTypes.forEach(function(info, name) {
+            const span = document.createElement('span');
+            span.className = 'tag';
+            span.style.borderColor = info.color;
+            span.style.color = info.color;
+            span.textContent = name;
+            legendEl.appendChild(span);
+        });
+
+        // Update type list with delete buttons
+        const typeListEl = document.querySelector('#causal-editor #typeList');
+        typeListEl.innerHTML = '';
+        nodeTypes.forEach(function(info, name) {
+            const div = document.createElement('div');
+            div.className = 'type-item';
+
+            const dot = document.createElement('span');
+            dot.className = 'type-color-dot';
+            dot.style.backgroundColor = info.color;
+
+            const label = document.createElement('span');
+            label.textContent = name;
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'type-delete-btn danger';
+            deleteBtn.textContent = 'x';
+            deleteBtn.onclick = function() { removeType(name); };
+
+            div.appendChild(dot);
+            div.appendChild(label);
+            div.appendChild(deleteBtn);
+            typeListEl.appendChild(div);
+        });
+
+        // Update type dropdowns
+        const typeOptions = '<option value="">-- select type --</option>' +
+            Array.from(nodeTypes.keys()).map(function(name) {
+                return '<option value="' + name + '">' + name + '</option>';
+            }).join('');
+        createNodeTypeEl.innerHTML = typeOptions;
+        editNodeTypeEl.innerHTML = typeOptions;
+
+        // Update filter checkboxes
+        updateFilterCheckboxes();
+    }
+
+    function updateFilterCheckboxes() {
+        const filterContainer = document.querySelector('#causal-editor #filterContainer');
+        // Keep only the orphans checkbox, rebuild type filters
+        const orphansLabel = filterContainer.querySelector('.type-label:last-child');
+
+        filterContainer.innerHTML = '';
+        nodeTypes.forEach(function(info, name) {
+            const label = document.createElement('label');
+            label.className = 'type-label';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = viewFilters[name] !== false;
+            checkbox.addEventListener('change', function() {
+                viewFilters[name] = checkbox.checked;
+                applyVisibility();
+            });
+
+            const countSpan = document.createElement('span');
+            countSpan.id = 'count_' + name.replace(/\s+/g, '_');
+            countSpan.textContent = '0';
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(' ' + name + ' ('));
+            label.appendChild(countSpan);
+            label.appendChild(document.createTextNode(')'));
+
+            filterContainer.appendChild(label);
+        });
+
+        // Re-add orphans checkbox
+        const orphansLabelNew = document.createElement('label');
+        orphansLabelNew.className = 'type-label';
+        const orphansCheckbox = document.createElement('input');
+        orphansCheckbox.type = 'checkbox';
+        orphansCheckbox.id = 'onlyOrphans';
+        orphansCheckbox.checked = viewFilters.onlyOrphans;
+        orphansCheckbox.addEventListener('change', function() {
+            viewFilters.onlyOrphans = orphansCheckbox.checked;
+            applyVisibility();
+        });
+        orphansLabelNew.appendChild(orphansCheckbox);
+        orphansLabelNew.appendChild(document.createTextNode(' Only Orphans ('));
+        const orphansCount = document.createElement('span');
+        orphansCount.id = 'countOrphans';
+        orphansCount.textContent = '0';
+        orphansLabelNew.appendChild(orphansCount);
+        orphansLabelNew.appendChild(document.createTextNode(')'));
+        filterContainer.appendChild(orphansLabelNew);
+    }
+
+    // --- Helpers ---
+
+    function wrapLabel(text, maxLen) {
+        if (maxLen === undefined) maxLen = 22;
+        if (!text) return '';
+        const words = String(text).split(/\s+/);
+        const lines = [];
+        let line = '';
+        words.forEach(function(word) {
+            const candidate = (line ? line + ' ' : '') + word;
+            if (candidate.length > maxLen) {
+                if (line) lines.push(line);
+                line = word;
+            } else {
+                line = candidate;
+            }
+        });
+        if (line) lines.push(line);
+        return lines.join('\n');
+    }
+
+    function slugifyLabel(label) {
+        let slug = label.trim().replace(/[\s]+/g, '_');
+        slug = slug.replace(/[^A-Za-z0-9_]/g, '_');
+        if (!slug) slug = 'node';
+        const base = slug;
+        let counter = 1;
+        while (nodesData.get(slug)) {
+            slug = base + '_' + counter;
+            counter++;
+        }
+        return slug;
+    }
+
+    // --- Drawing & visibility ---
+
+    function drawNetwork(viewNodesArr, viewEdgesArr) {
+        const container = document.querySelector('#causal-editor #network');
+
+        const useHierarchical = (currentSortMethod === 'directed');
+
+        networkNodes = new vis.DataSet(viewNodesArr);
+        networkEdges = new vis.DataSet(viewEdgesArr);
+
+        const data = { nodes: networkNodes, edges: networkEdges };
+
+        const options = {
+            layout: useHierarchical ? {
+                hierarchical: {
+                    enabled: true,
+                    direction: 'UD',
+                    sortMethod: 'directed',
+                    levelSeparation: 150,
+                    nodeSpacing: 120,
+                    treeSpacing: 200,
+                    blockShifting: true,
+                    edgeMinimization: true,
+                    parentCentralization: true
+                }
+            } : {},
+            physics: useHierarchical ? { enabled: false } : {
+                enabled: true,
+                solver: 'forceAtlas2Based',
+                forceAtlas2Based: {
+                    gravitationalConstant: -50,
+                    centralGravity: 0.01,
+                    springLength: 100,
+                    springConstant: 0.08
+                },
+                stabilization: { iterations: 150 }
+            },
+            nodes: {
+                shape: 'dot',
+                size: 20,
+                font: { size: 12, align: 'center', multi: 'md' },
+                scaling: { label: { enabled: true, min: 10, max: 16 } },
+                widthConstraint: { maximum: 200 }
+            },
+            edges: { arrows: { to: { enabled: false } }, color: '#666666' },
+            interaction: { dragNodes: true, dragView: true, zoomView: true, hover: true }
+        };
+
+        if (network) network.destroy();
+        network = new vis.Network(container, data, options);
+
+        network.on('click', function(params) {
+            const srcEvent = params.event && params.event.srcEvent;
+            const shift = srcEvent && srcEvent.shiftKey;
+
+            if (params.edges && params.edges.length && (!params.nodes || !params.nodes.length)) {
+                const edgeId = params.edges[0];
+                const e = networkEdges.get(edgeId);
+                if (e) {
+                    edgeFromEl.value = String(e.from);
+                    edgeToEl.value = String(e.to);
+                }
+
+                if (deletePressed) {
+                    handleEdgeDeleteClick(params.edges);
+                    return;
+                }
+            }
+
+            if (shift && params.nodes && params.nodes.length) {
+                handleShiftNodeClick(params.nodes[0]);
+                return;
+            }
+
+            if (params.nodes && params.nodes.length) {
+                selectNodeInUI(params.nodes[0]);
+            } else {
+                clearSelectedNodeInUI();
+            }
+        });
+
+        network.on('doubleClick', function(params) {
+            if (!params.nodes || !params.nodes.length) return;
+            const nodeId = params.nodes[0];
+
+            if (isIsolated && isolatedNodeId === nodeId) {
+                showAll();
+            } else {
+                selectNodeInUI(nodeId);
+                isolateSelectedNode();
+            }
+        });
+
+        network.fit({ animation: false });
+    }
+
+    function updateBlinking(degreeMap, visibleNodeIds) {
+        if (blinkInterval) {
+            clearInterval(blinkInterval);
+            blinkInterval = null;
+        }
+        blinkingIds = new Set();
+        if (!networkNodes) return;
+
+        Object.keys(degreeMap).forEach(function(id) {
+            if (degreeMap[id] === 0 && visibleNodeIds.has(id)) {
+                blinkingIds.add(id);
+            }
+        });
+
+        if (!blinkingIds.size) return;
+
+        let blinkOn = false;
+        blinkInterval = setInterval(function() {
+            const updates = [];
+            blinkingIds.forEach(function(id) {
+                const n = networkNodes.get(id);
+                if (!n) return;
+                const base = n.baseColor || n.color || 'gray';
+                updates.push({ id: id, color: blinkOn ? '#ffffff' : base });
+            });
+            if (updates.length) networkNodes.update(updates);
+            blinkOn = !blinkOn;
+        }, 800);
+    }
+
+    function updateCounts(degreeMap) {
+        const counts = {};
+        nodeTypes.forEach(function(info, name) { counts[name] = 0; });
+
+        nodesData.get().forEach(function(n) {
+            if (counts[n.type] != null) counts[n.type]++;
+        });
+
+        nodeTypes.forEach(function(info, name) {
+            const countEl = document.querySelector('#causal-editor #count_' + name.replace(/\s+/g, '_'));
+            if (countEl) countEl.textContent = counts[name] || 0;
+        });
+
+        let orphanCount = 0;
+        Object.keys(degreeMap).forEach(function(id) {
+            if (degreeMap[id] === 0) orphanCount++;
+        });
+        const orphansEl = document.querySelector('#causal-editor #countOrphans');
+        if (orphansEl) orphansEl.textContent = orphanCount;
+    }
+
+    function applyVisibility() {
+        const degreeMap = {};
+        nodesData.get().forEach(function(n) { degreeMap[n.id] = 0; });
+        edgesData.get().forEach(function(e) {
+            if (degreeMap[e.from] != null) degreeMap[e.from]++;
+            if (degreeMap[e.to] != null) degreeMap[e.to]++;
+        });
+
+        const visibleNodeIds = new Set();
+
+        nodesData.get().forEach(function(n) {
+            const id = n.id;
+            let visible = true;
+
+            if (isIsolated && isolateSet && !isolateSet.has(id)) visible = false;
+
+            if (visible && viewFilters[n.type] === false) visible = false;
+            if (visible && viewFilters.onlyOrphans && degreeMap[id] > 0) visible = false;
+
+            if (visible) visibleNodeIds.add(id);
+        });
+
+        const viewNodesArr = [];
+        nodesData.get().forEach(function(n) {
+            if (!visibleNodeIds.has(n.id)) return;
+            const baseColor = n.baseColor || getTypeColor(n.type);
+            viewNodesArr.push({
+                id: n.id,
+                label: n.label,
+                rawLabel: n.rawLabel,
+                type: n.type,
+                baseColor: baseColor,
+                color: baseColor
+            });
+        });
+
+        const viewEdgesArr = [];
+        edgesData.get().forEach(function(e) {
+            if (visibleNodeIds.has(e.from) && visibleNodeIds.has(e.to)) {
+                viewEdgesArr.push({
+                    id: e.id,
+                    from: e.from,
+                    to: e.to,
+                    color: e.color || '#666666'
+                });
+            }
+        });
+
+        updateCounts(degreeMap);
+        drawNetwork(viewNodesArr, viewEdgesArr);
+        updateBlinking(degreeMap, visibleNodeIds);
+    }
+
+    // --- Isolate ---
+
+    function isolateSelectedNode() {
+        if (!selectedNodeId) {
+            alert('Select a node in the graph first.');
+            return;
+        }
+        const startNode = nodesData.get(selectedNodeId);
+        if (!startNode) {
+            alert('Selected node not found.');
+            return;
+        }
+
+        // BFS to find all connected nodes (undirected)
+        const adj = {};
+        nodesData.get().forEach(function(n) { adj[n.id] = new Set(); });
+        edgesData.get().forEach(function(e) {
+            if (adj[e.from]) adj[e.from].add(e.to);
+            if (adj[e.to]) adj[e.to].add(e.from);
+        });
+
+        const visited = new Set([selectedNodeId]);
+        const queue = [selectedNodeId];
+        while (queue.length) {
+            const id = queue.shift();
+            (adj[id] || []).forEach(function(neighborId) {
+                if (!visited.has(neighborId)) {
+                    visited.add(neighborId);
+                    queue.push(neighborId);
+                }
+            });
+        }
+
+        isIsolated = true;
+        isolateSet = visited;
+        isolatedNodeId = selectedNodeId;
+
+        applyVisibility();
+    }
+
+    function showAll() {
+        isIsolated = false;
+        isolateSet = null;
+        isolatedNodeId = null;
+        applyVisibility();
+    }
+
+    // --- Edge helpers ---
+
+    function handleShiftNodeClick(nodeId) {
+        if (!edgeCreationSourceId) {
+            edgeCreationSourceId = nodeId;
+            if (network) network.selectNodes([nodeId]);
+            return;
+        }
+
+        if (edgeCreationSourceId === nodeId) {
+            edgeCreationSourceId = null;
+            if (network) network.selectNodes([]);
+            return;
+        }
+
+        const fromId = edgeCreationSourceId;
+        const toId = nodeId;
+        edgeCreationSourceId = null;
+        if (network) network.selectNodes([]);
+
+        // Check if edge already exists (either direction)
+        const existing = edgesData.get({
+            filter: function(e) {
+                return (e.from === fromId && e.to === toId) ||
+                       (e.from === toId && e.to === fromId);
+            }
+        });
+        if (existing.length) {
+            alert('An edge between these nodes already exists.');
+            return;
+        }
+
+        edgesData.add({ from: fromId, to: toId, color: '#666666' });
+        isDirty = true;
+        refreshNodeSelects();
+        applyVisibility();
+    }
+
+    function handleEdgeDeleteClick(edgeIds) {
+        if (!edgeIds || !edgeIds.length) return;
+        if (!confirm('Delete selected edge(s)?')) return;
+        edgesData.remove(edgeIds);
+        isDirty = true;
+        refreshNodeSelects();
+        deletePressed = false;
+        applyVisibility();
+    }
+
+    // --- DOM wiring ---
+
+    const importNodesFileEl = document.querySelector('#causal-editor #importNodesFile');
+    const importEdgesFileEl = document.querySelector('#causal-editor #importEdgesFile');
+
+    const selectedNodeIdEl = document.querySelector('#causal-editor #selectedNodeId');
+    const createNodeLabelEl = document.querySelector('#causal-editor #createNodeLabel');
+    const createNodeTypeEl = document.querySelector('#causal-editor #createNodeType');
+
+    const editNodeLabelEl = document.querySelector('#causal-editor #editNodeLabel');
+    const editNodeTypeEl = document.querySelector('#causal-editor #editNodeType');
+
+    const edgeFromEl = document.querySelector('#causal-editor #edgeFrom');
+    const edgeToEl = document.querySelector('#causal-editor #edgeTo');
+
+    const sortMethodEl = document.querySelector('#causal-editor #sortMethod');
+    const isolateNodeDisplayEl = document.querySelector('#causal-editor #isolateNodeDisplay');
+
+    const newTypeNameEl = document.querySelector('#causal-editor #newTypeName');
+
+    // CSV file handlers
+    importNodesFileEl.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            pendingNodesCSV = ev.target.result || '';
+        };
+        reader.readAsText(file);
+    });
+
+    importEdgesFileEl.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(ev) {
+            pendingEdgesCSV = ev.target.result || '';
+        };
+        reader.readAsText(file);
+    });
+
+    document.querySelector('#causal-editor #btnImportCSV').addEventListener('click', function() {
+        if (!pendingNodesCSV && !pendingEdgesCSV) {
+            alert('Please select at least one CSV file to import.');
+            return;
+        }
+        handleCSVImport(pendingNodesCSV, pendingEdgesCSV);
+        pendingNodesCSV = null;
+        pendingEdgesCSV = null;
+        importNodesFileEl.value = '';
+        importEdgesFileEl.value = '';
+    });
+
+    document.querySelector('#causal-editor #btnClear').addEventListener('click', function() {
+        if (!confirm('Clear all nodes, edges, and types?')) return;
+        nodesData.clear();
+        edgesData.clear();
+        nodeTypes.clear();
+        colorIndex = 0;
+        viewFilters = { onlyOrphans: false };
+        isDirty = true;
+        selectedNodeId = null;
+        clearSelectedNodeInUI();
+        refreshNodeSelects();
+        updateTypeUI();
+
+        isIsolated = false;
+        isolateSet = null;
+        isolatedNodeId = null;
+
+        applyVisibility();
+    });
+
+    document.querySelector('#causal-editor #btnExportNodesCSV').addEventListener('click', function() {
+        const rows = [['Node', 'Type']];
+        nodesData.get().forEach(function(n) {
+            rows.push([n.rawLabel || n.label, n.type || '']);
+        });
+        downloadCSV(rows, 'nodes.csv');
+        isDirty = false;
+    });
+
+    document.querySelector('#causal-editor #btnExportEdgesCSV').addEventListener('click', function() {
+        const rows = [['Node 1', 'Node 2']];
+        const nodeMap = {};
+        nodesData.get().forEach(function(n) {
+            nodeMap[n.id] = n.rawLabel || n.label;
+        });
+        edgesData.get().forEach(function(e) {
+            rows.push([nodeMap[e.from] || e.from, nodeMap[e.to] || e.to]);
+        });
+        downloadCSV(rows, 'edges.csv');
+        isDirty = false;
+    });
+
+    document.querySelector('#causal-editor #btnAddType').addEventListener('click', function() {
+        const name = newTypeNameEl.value.trim();
+        if (!name) {
+            alert('Please enter a type name.');
+            return;
+        }
+        if (nodeTypes.has(name)) {
+            alert('Type "' + name + '" already exists.');
+            return;
+        }
+        addType(name);
+        newTypeNameEl.value = '';
+        isDirty = true;
+    });
+
+    document.querySelector('#causal-editor #btnAddNode').addEventListener('click', function() {
+        const label = createNodeLabelEl.value.trim();
+        const type = createNodeTypeEl.value;
+        if (!label) {
+            alert('Please enter a label for the node.');
+            return;
+        }
+        if (!type) {
+            alert('Please select a type for the node.');
+            return;
+        }
+        const id = slugifyLabel(label);
+        const color = getTypeColor(type);
+        nodesData.add({
+            id: id,
+            label: wrapLabel(label),
+            rawLabel: label,
+            type: type,
+            baseColor: color,
+            color: color
+        });
+        isDirty = true;
+        refreshNodeSelects();
+        createNodeLabelEl.value = '';
+        selectedNodeId = id;
+        selectNodeInUI(id);
+        applyVisibility();
+    });
+
+    document.querySelector('#causal-editor #btnUpdateNode').addEventListener('click', function() {
+        if (!selectedNodeId) {
+            alert('Select a node in the graph first.');
+            return;
+        }
+        const node = nodesData.get(selectedNodeId);
+        if (!node) {
+            alert('Selected node not found.');
+            return;
+        }
+
+        const newRaw = editNodeLabelEl.value.trim() || node.rawLabel || node.label;
+        const newType = editNodeTypeEl.value || node.type;
+        const color = getTypeColor(newType);
+
+        nodesData.update({
+            id: node.id,
+            label: wrapLabel(newRaw),
+            rawLabel: newRaw,
+            type: newType,
+            baseColor: color,
+            color: color
+        });
+
+        isDirty = true;
+        refreshNodeSelects();
+        selectNodeInUI(node.id);
+        applyVisibility();
+    });
+
+    document.querySelector('#causal-editor #btnDeleteNode').addEventListener('click', function() {
+        if (!selectedNodeId) {
+            alert('Select a node to delete.');
+            return;
+        }
+        if (!confirm('Delete node and all connected edges?')) return;
+        const edgesToRemove = edgesData.get({
+            filter: function(e) { return e.from === selectedNodeId || e.to === selectedNodeId; }
+        }).map(function(e) { return e.id; });
+        if (edgesToRemove.length) edgesData.remove(edgesToRemove);
+        nodesData.remove(selectedNodeId);
+        isDirty = true;
+        selectedNodeId = null;
+        clearSelectedNodeInUI();
+        refreshNodeSelects();
+        applyVisibility();
+    });
+
+    document.querySelector('#causal-editor #btnAddEdge').addEventListener('click', function() {
+        const fromId = edgeFromEl.value;
+        const toId = edgeToEl.value;
+        if (!fromId || !toId) {
+            alert('Select both nodes.');
+            return;
+        }
+        if (fromId === toId) {
+            alert('Nodes must be different.');
+            return;
+        }
+
+        // Check if edge already exists (either direction)
+        const existing = edgesData.get({
+            filter: function(e) {
+                return (e.from === fromId && e.to === toId) ||
+                       (e.from === toId && e.to === fromId);
+            }
+        });
+        if (existing.length) {
+            alert('An edge between these nodes already exists.');
+            return;
+        }
+
+        edgesData.add({ from: fromId, to: toId, color: '#666666' });
+        isDirty = true;
+        refreshNodeSelects();
+        applyVisibility();
+    });
+
+    document.querySelector('#causal-editor #btnDeleteEdge').addEventListener('click', function() {
+        const fromId = edgeFromEl.value;
+        const toId = edgeToEl.value;
+        if (!fromId || !toId) {
+            alert('Select both nodes to delete edges between them.');
+            return;
+        }
+        const toDelete = edgesData.get({
+            filter: function(e) {
+                return (e.from === fromId && e.to === toId) ||
+                       (e.from === toId && e.to === fromId);
+            }
+        }).map(function(e) { return e.id; });
+        if (!toDelete.length) {
+            alert('No edges found between the selected nodes.');
+            return;
+        }
+        if (!confirm('Delete edge(s) between the selected nodes?')) return;
+        edgesData.remove(toDelete);
+        isDirty = true;
+        refreshNodeSelects();
+        applyVisibility();
+    });
+
+    document.querySelector('#causal-editor #btnIsolate').addEventListener('click', isolateSelectedNode);
+    document.querySelector('#causal-editor #btnShowAll').addEventListener('click', showAll);
+
+    sortMethodEl.addEventListener('change', function() {
+        currentSortMethod = sortMethodEl.value;
+        applyVisibility();
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if ((e.key === 'Delete' || e.key === 'Backspace') &&
+            !(e.target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName))) {
+            deletePressed = true;
+        }
+    });
+    document.addEventListener('keyup', function(e) {
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+            deletePressed = false;
+        }
+    });
+
+    function selectNodeInUI(id) {
+        selectedNodeId = id;
+        const node = nodesData.get(id);
+        if (!node) {
+            clearSelectedNodeInUI();
+            return;
+        }
+        selectedNodeIdEl.textContent = node.rawLabel || node.label || id;
+        editNodeLabelEl.value = node.rawLabel || node.label || '';
+        editNodeTypeEl.value = node.type || '';
+
+        if (isolateNodeDisplayEl) {
+            isolateNodeDisplayEl.textContent = node.rawLabel || node.label || id;
+        }
+
+        if (!edgeFromEl.value) edgeFromEl.value = id;
+    }
+
+    function clearSelectedNodeInUI() {
+        selectedNodeId = null;
+        selectedNodeIdEl.textContent = 'None';
+        if (isolateNodeDisplayEl) isolateNodeDisplayEl.textContent = 'None';
+    }
+
+    function refreshNodeSelects() {
+        const nodes = nodesData.get().slice().sort(function(a, b) {
+            const la = (a.rawLabel || a.label || '').toLowerCase();
+            const lb = (b.rawLabel || b.label || '').toLowerCase();
+            if (la < lb) return -1;
+            if (la > lb) return 1;
+            return 0;
+        });
+        [edgeFromEl, edgeToEl].forEach(function(sel) {
+            const current = sel.value;
+            sel.innerHTML = '<option value="">-- select --</option>';
+            nodes.forEach(function(n) {
+                const opt = document.createElement('option');
+                opt.value = n.id;
+                opt.textContent = n.rawLabel || n.label || n.id;
+                sel.appendChild(opt);
+            });
+            if (current && nodes.some(function(n) { return String(n.id) === current; })) {
+                sel.value = current;
+            }
+        });
+    }
+
+    // --- CSV Import/Export ---
+
+    function parseCSV(text) {
+        const lines = text.split(/\r?\n/);
+        const rows = [];
+        lines.forEach(function(line) {
+            if (!line.trim()) return;
+            // Simple CSV parsing (handles basic cases)
+            const cells = [];
+            let current = '';
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    cells.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            cells.push(current.trim());
+            rows.push(cells);
+        });
+        return rows;
+    }
+
+    function handleCSVImport(nodesCSV, edgesCSV) {
+        // Clear existing data
+        nodesData.clear();
+        edgesData.clear();
+        nodeTypes.clear();
+        colorIndex = 0;
+        viewFilters = { onlyOrphans: false };
+
+        const nodeMap = {}; // label -> id
+
+        // Parse nodes CSV
+        if (nodesCSV) {
+            const rows = parseCSV(nodesCSV);
+            // Skip header row
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (row.length < 2) continue;
+                const label = row[0];
+                const type = row[1];
+                if (!label) continue;
+
+                // Add type if new
+                if (type && !nodeTypes.has(type)) {
+                    addType(type);
+                }
+
+                const id = slugifyLabel(label);
+                const color = getTypeColor(type || 'Unknown');
+                nodeMap[label] = id;
+
+                nodesData.add({
+                    id: id,
+                    label: wrapLabel(label),
+                    rawLabel: label,
+                    type: type || 'Unknown',
+                    baseColor: color,
+                    color: color
+                });
+            }
+        }
+
+        // Add Unknown type if needed
+        const unknownNodes = nodesData.get({ filter: function(n) { return n.type === 'Unknown'; } });
+        if (unknownNodes.length > 0 && !nodeTypes.has('Unknown')) {
+            addType('Unknown', '#999999');
+        }
+
+        // Parse edges CSV
+        if (edgesCSV) {
+            const rows = parseCSV(edgesCSV);
+            // Skip header row
+            for (let i = 1; i < rows.length; i++) {
+                const row = rows[i];
+                if (row.length < 2) continue;
+                const label1 = row[0];
+                const label2 = row[1];
+                if (!label1 || !label2) continue;
+
+                let id1 = nodeMap[label1];
+                let id2 = nodeMap[label2];
+
+                // Create nodes if they don't exist (from edges file)
+                if (!id1) {
+                    id1 = slugifyLabel(label1);
+                    nodeMap[label1] = id1;
+                    if (!nodeTypes.has('Unknown')) {
+                        addType('Unknown', '#999999');
+                    }
+                    nodesData.add({
+                        id: id1,
+                        label: wrapLabel(label1),
+                        rawLabel: label1,
+                        type: 'Unknown',
+                        baseColor: '#999999',
+                        color: '#999999'
+                    });
+                }
+                if (!id2) {
+                    id2 = slugifyLabel(label2);
+                    nodeMap[label2] = id2;
+                    if (!nodeTypes.has('Unknown')) {
+                        addType('Unknown', '#999999');
+                    }
+                    nodesData.add({
+                        id: id2,
+                        label: wrapLabel(label2),
+                        rawLabel: label2,
+                        type: 'Unknown',
+                        baseColor: '#999999',
+                        color: '#999999'
+                    });
+                }
+
+                // Check if edge already exists
+                const existing = edgesData.get({
+                    filter: function(e) {
+                        return (e.from === id1 && e.to === id2) ||
+                               (e.from === id2 && e.to === id1);
+                    }
+                });
+                if (!existing.length) {
+                    edgesData.add({ from: id1, to: id2, color: '#666666' });
+                }
+            }
+        }
+
+        isDirty = true;
+        selectedNodeId = null;
+        clearSelectedNodeInUI();
+        refreshNodeSelects();
+        updateTypeUI();
+
+        isIsolated = false;
+        isolateSet = null;
+        isolatedNodeId = null;
+
+        applyVisibility();
+
+        const nodeCount = nodesData.get().length;
+        const edgeCount = edgesData.get().length;
+        const typeCount = nodeTypes.size;
+        alert('Import complete: ' + nodeCount + ' nodes, ' + edgeCount + ' edges, ' + typeCount + ' types.');
+    }
+
+    function downloadCSV(rows, filename) {
+        const csvContent = rows.map(function(row) {
+            return row.map(function(cell) {
+                // Escape quotes and wrap in quotes if contains comma or quote
+                const str = String(cell || '');
+                if (str.indexOf(',') >= 0 || str.indexOf('"') >= 0 || str.indexOf('\n') >= 0) {
+                    return '"' + str.replace(/"/g, '""') + '"';
+                }
+                return str;
+            }).join(',');
+        }).join('\n');
+
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(a.href);
+    }
+
+    // Warn on tab close / navigation if there are unsaved changes
+    window.addEventListener('beforeunload', function(e) {
+        if (!isDirty) return;
+        e.preventDefault();
+        e.returnValue = '';
+        return '';
+    });
+
+    window.addEventListener('load', function() {
+        sortMethodEl.value = 'alpha';
+        currentSortMethod = 'alpha';
+        updateTypeUI();
+        applyVisibility();
+    });
+
+    // Node search with typeahead
+    const nodeSearchEl = document.querySelector('#causal-editor #nodeSearch');
+    const searchResultsEl = document.querySelector('#causal-editor #searchResults');
+    let searchHighlightIndex = -1;
+
+    function updateSearchResults(query) {
+        searchResultsEl.innerHTML = '';
+        searchHighlightIndex = -1;
+
+        if (!query || query.length < 1) {
+            searchResultsEl.classList.remove('active');
+            return;
+        }
+
+        const lowerQuery = query.toLowerCase();
+        const matches = nodesData.get().filter(function(n) {
+            const label = (n.rawLabel || n.label || '').toLowerCase();
+            return label.includes(lowerQuery);
+        }).slice(0, 20); // Limit to 20 results
+
+        if (matches.length === 0) {
+            searchResultsEl.classList.remove('active');
+            return;
+        }
+
+        matches.forEach(function(n, idx) {
+            const div = document.createElement('div');
+            div.className = 'search-result-item';
+            div.dataset.nodeId = n.id;
+
+            const dot = document.createElement('span');
+            dot.className = 'search-result-dot';
+            dot.style.backgroundColor = getTypeColor(n.type);
+
+            const label = document.createElement('span');
+            label.className = 'search-result-label';
+            label.textContent = n.rawLabel || n.label;
+
+            const type = document.createElement('span');
+            type.className = 'search-result-type';
+            type.textContent = n.type || '';
+
+            div.appendChild(dot);
+            div.appendChild(label);
+            div.appendChild(type);
+
+            div.addEventListener('click', function() {
+                selectSearchResult(n.id);
+            });
+
+            searchResultsEl.appendChild(div);
+        });
+
+        searchResultsEl.classList.add('active');
+    }
+
+    function selectSearchResult(nodeId) {
+        nodeSearchEl.value = '';
+        searchResultsEl.classList.remove('active');
+        searchResultsEl.innerHTML = '';
+
+        // Select the node in UI
+        selectNodeInUI(nodeId);
+
+        // Focus on the node in the network
+        if (network && networkNodes && networkNodes.get(nodeId)) {
+            network.selectNodes([nodeId]);
+            network.focus(nodeId, {
+                scale: 1.5,
+                animation: {
+                    duration: 500,
+                    easingFunction: 'easeInOutQuad'
+                }
+            });
+        }
+    }
+
+    function highlightSearchResult(index) {
+        const items = searchResultsEl.querySelectorAll('.search-result-item');
+        items.forEach(function(item, i) {
+            if (i === index) {
+                item.classList.add('highlighted');
+                item.scrollIntoView({ block: 'nearest' });
+            } else {
+                item.classList.remove('highlighted');
+            }
+        });
+    }
+
+    nodeSearchEl.addEventListener('input', function() {
+        updateSearchResults(nodeSearchEl.value.trim());
+    });
+
+    nodeSearchEl.addEventListener('keydown', function(e) {
+        const items = searchResultsEl.querySelectorAll('.search-result-item');
+        if (!items.length) return;
+
+        if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            searchHighlightIndex = Math.min(searchHighlightIndex + 1, items.length - 1);
+            highlightSearchResult(searchHighlightIndex);
+        } else if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            searchHighlightIndex = Math.max(searchHighlightIndex - 1, 0);
+            highlightSearchResult(searchHighlightIndex);
+        } else if (e.key === 'Enter') {
+            e.preventDefault();
+            if (searchHighlightIndex >= 0 && items[searchHighlightIndex]) {
+                const nodeId = items[searchHighlightIndex].dataset.nodeId;
+                selectSearchResult(nodeId);
+            } else if (items.length > 0) {
+                const nodeId = items[0].dataset.nodeId;
+                selectSearchResult(nodeId);
+            }
+        } else if (e.key === 'Escape') {
+            searchResultsEl.classList.remove('active');
+            nodeSearchEl.blur();
+        }
+    });
+
+    nodeSearchEl.addEventListener('blur', function() {
+        // Delay to allow click on result
+        setTimeout(function() {
+            searchResultsEl.classList.remove('active');
+        }, 200);
+    });
+
+    nodeSearchEl.addEventListener('focus', function() {
+        if (nodeSearchEl.value.trim()) {
+            updateSearchResults(nodeSearchEl.value.trim());
+        }
+    });
+
+    // Help modal
+    const helpModal = document.querySelector('#causal-editor #helpModal');
+    document.querySelector('#causal-editor #btnHelp').addEventListener('click', function() {
+        helpModal.classList.add('visible');
+    });
+    document.querySelector('#causal-editor #btnCloseHelp').addEventListener('click', function() {
+        helpModal.classList.remove('visible');
+    });
+    helpModal.addEventListener('click', function(e) {
+        if (e.target === helpModal) {
+            helpModal.classList.remove('visible');
+        }
+    });
+</script>

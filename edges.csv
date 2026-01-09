@@ -1,0 +1,109 @@
+Node 1,Node 2
+New Feature Release,Product Functionality Documentation Update (Confluence)
+New Feature Release,Release Notes (Jira)
+New Feature Release,Release Notes (Confluence)
+New Feature Release,Release Notes (Intercom)
+New Feature Release,Release Announcement (Intercom)
+New Feature Release,Feature Demo Videos - Internal (Confluence)
+New Feature Release,Feature Demo Videos - External (Confluence)
+New Feature Release,Indeavor Talks (Website)
+New Feature Release,Internal Training Session - Revenue
+New Feature Release,Internal Training Session - QA
+New Feature Release,Internal Training Session - CX
+New Feature Release,Upcoming Release Channel Messages (Slack)
+New Feature Release,Internal Release Announcements (Slack)
+New Feature Release,Statutes Updated (Confluence)
+New Feature Release,Monthly Initiative & Pillar Updates (Box)
+New Feature Release,KPIs Updated (Box)
+New Feature Release,Setup Guide Created (Confluence)
+New Feature Release,Newsletter Updates (Hubspot)
+New Feature Release,Website Updates (Website)
+New Feature Release,Implementation Collateral Updated (Box)
+New Feature Release,Scribe SOPs (Scribe)
+New Feature Release,KBAs Updated (Intercom)
+New Feature Release,Indeavor Learning Hub Updated (Workramp)
+New Feature Release,PQ Release ILH Course (Workramp)
+New Feature Release,Pricing & Packaging Defined (Confluence)
+New Feature Release,Regression Testing Script Created (QASE)
+Bug Fix Released,Release Notes (Jira)
+Bug Fix Released,Release Notes (Confluence)
+Bug Fix Released,Release Notes (Intercom)
+Bug Fix Released,Upcoming Release Channel Messages (Slack)
+Bug Fix Released,PQ Release ILH Course (Workramp)
+Bug Fix Released,Regression Testing Script Updated (QASE)
+Hot Fix Released,Release Notes (Jira)
+Hot Fix Released,Release Notes (Confluence)
+Hot Fix Released,Release Notes (Intercom)
+Update to Existing Feature,Product Functionality Documentation Update
+Update to Existing Feature,PQ Release ILH Course (Workramp)
+Update to Existing Feature,Release Notes (Jira)
+Update to Existing Feature,Release Notes (Confluence)
+Update to Existing Feature,Release Notes (Intercom)
+Update to Existing Feature,Upcoming Release Channel Messages (Slack)
+Update to Existing Feature,Implementation Collateral Updated (Box)
+Update to Existing Feature,Scribe SOPs (Scribe)
+Update to Existing Feature,KBAs Updated (Intercom)
+Update to Existing Feature,Indeavor Learning Hub Updated (Workramp)
+Update to Existing Feature,Regression Testing Script Updated (QASE)
+Product Functionality Documentation Update,Update Athena AI Model
+Product Functionality Documentation Update,Update Product Management GPTs (ChatGPT)
+KBAs Updated (Intercom),Update Product Management GPTs (ChatGPT)
+New Customer - Closed Won,Implementation Kick-off with customer
+New Customer - Closed Won,Enivronment placement request for new customer
+New Customer - Closed Won,Implementation Project created & resourced (Wrike)
+Enivronment placement request for new customer,Domain creation (CX App) 
+Implementation Preparing for Training,ITD refresh need identified
+ITD refresh need identified,ITD refreshed (CX App) 
+Implementation Preparing for Training,ILH enrollments & auto report created (Workramp)
+Implementation Preparing for GL ,CSM assigned
+Implementation Preparing for GL ,Transition to customer success meeting?
+Implementation Preparing for GL ,Customer 101 page created
+Implementation Preparing for GL ,Customer added to Intercom
+Implementation Preparing for GL ,Customer added to PowerBI for KPIs (PowerBI)
+Implementation Go Live,PLS project need identified (Jira) (IMP)
+CSM Regular Live Customer Engagement ,PLS project need identified (Jira) (CS)
+CSM Regular Live Customer Engagement ,Subscription increase request/need
+CSM Regular Live Customer Engagement ,Customer shares product feedback 
+PLS project need identified (Jira),PLS Project created & resourced (Wrike)
+Customer shares product feedback ,Customer feedback shared with team (Aha)
+Subscription increase request/need,Update domain subscription limit (CX App)
+Network Upsell Booster - Closed Won,ILH access update for Platinum (Workramp)
+Network Upsell Booster - Closed Won,Quarterly SBX refreshes (Jira/CX App)
+Network Upsell Booster - Closed Won,Tech owned SBX refreshes (CX App)
+Network Upsell Booster - Closed Won,ILH access update for Platinum (Workramp)
+Network Upsell Booster - Closed Won,Quarterly SBX refreshes (Jira/CX App)
+Network Upsell Booster - Closed Won,Tech owned SBX refreshes (CX App)
+Site Level Upsell Add On - Closed Won,PLS Project created & resourced (Wrike)
+Network Upsell Add On - Closed Won,PLS Project created & resourced (Wrike)
+Expansion - Closed Won,Implementation Kick-off with customer
+Expansion - Closed Won,Enivronment placement request for new customer
+Expansion - Closed Won,Implementation Project created & resourced (Wrike)
+Renewal Lost,Decommission domain(s)
+Decommission domain(s),SOC2 data purging proof
+Newsletter Updates (Hubspot),Potential Customer Outreach
+Website Updates (Website),Potential Customer Outreach
+Event Attended,Leads updated
+Leads updated,Potential Customer Outreach
+Pricing & Packaging Defined (Confluence),Potential Customer Outreach
+Renewal Contract Proposal,Renewal Closed Won
+Renewal Contract Proposal,Renewal Lost
+Potential Customer Outreach,Lead Qualified
+Lead Qualified,Opportunity Created
+Opportunity Created,New Customer - Closed Lost
+Opportunity Created,Network Upsell Add On - Closed Lost
+Opportunity Created,Expansion - Closed Lost
+Opportunity Created,Network Upsell Booster - Closed Lost
+Opportunity Created,New Customer - Closed Won
+Opportunity Created,Network Upsell Add On - Closed Won
+Opportunity Created,Expansion - Closed Won
+Opportunity Created,Network Upsell Booster - Closed Won
+Opportunity Created,Site Level Upsell Add On - Closed Lost
+Opportunity Created,Network Upsell Booster - Closed Lost
+Opportunity Created,Site Level Upsell Add On - Closed Won
+Opportunity Created,Network Upsell Booster - Closed Won
+New Customer - Closed Lost,Opportunity Closed & Reengagement date set (S)
+Network Upsell Add On - Closed Lost,Opportunity Closed & Reengagement date set (S)
+Expansion - Closed Lost,Opportunity Closed & Reengagement date set (S)
+Network Upsell Booster - Closed Lost,Opportunity Closed & Reengagement date set (S)
+Site Level Upsell Add On - Closed Lost,Opportunity Closed & Reengagement date set (CS)
+Network Upsell Booster - Closed Lost,Opportunity Closed & Reengagement date set (CS)
