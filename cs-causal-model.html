@@ -1,4 +1,5 @@
 <!-- graph model editor -->
+<link rel="icon" type="image/png" href="https://www.indeavor.com/wp-content/uploads/2020/05/favicon-75x75.png">
 <style>
     /* Hard encapsulation: everything inside #causal-editor */
     #causal-editor,
@@ -8,10 +9,11 @@
     }
 
     #causal-editor {
-        height: 80vh !important;
+        height: calc(100vh - 16px) !important;
         width: 100% !important;
         background: #ffffff !important;
         color: #111111 !important;
+        margin: 8px !important;
     }
 
     #causal-editor a {
@@ -163,13 +165,20 @@
     }
 
     #causal-editor .tag {
-        padding: 4px 8px !important;
+        padding: 4px 10px !important;
         border-radius: 999px !important;
         font-size: 11px !important;
-        border: 2px solid #cccccc !important;
-        background: #ffffff !important;
-        color: #111111 !important;
+        border: none !important;
+        background: #cccccc !important;
+        color: #ffffff !important;
         white-space: nowrap !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        transition: opacity 0.2s !important;
+    }
+
+    #causal-editor .tag:hover {
+        opacity: 0.85 !important;
     }
 
     #causal-editor .section {
@@ -182,6 +191,20 @@
         background: #eeeeee !important;
         border-radius: 4px !important;
         margin-bottom: 6px !important;
+    }
+
+    #causal-editor .view-state-indicator {
+        font-size: 11px !important;
+        padding: 6px 8px !important;
+        border-radius: 4px !important;
+        margin-bottom: 6px !important;
+        background: #e8f4e8 !important;
+        border-left: 3px solid #2ecc71 !important;
+    }
+
+    #causal-editor .view-state-indicator.isolated {
+        background: #fff3e0 !important;
+        border-left-color: #f39c12 !important;
     }
 
     #causal-editor #exportText {
@@ -478,15 +501,19 @@
             <!-- Edge editor -->
             <div class="section">
                 <h3>Edge Editor</h3>
-                <label for="edgeFrom">Node A</label>
-                <select id="edgeFrom">
-                    <option value="">-- select --</option>
-                </select>
+                <label for="edgeFromInput">Node A</label>
+                <div style="position:relative;">
+                    <input type="text" id="edgeFromInput" placeholder="Type to search..." autocomplete="off">
+                    <input type="hidden" id="edgeFrom">
+                    <div id="edgeFromResults" class="search-results"></div>
+                </div>
 
-                <label for="edgeTo">Node B</label>
-                <select id="edgeTo">
-                    <option value="">-- select --</option>
-                </select>
+                <label for="edgeToInput">Node B</label>
+                <div style="position:relative;">
+                    <input type="text" id="edgeToInput" placeholder="Type to search..." autocomplete="off">
+                    <input type="hidden" id="edgeTo">
+                    <div id="edgeToResults" class="search-results"></div>
+                </div>
 
                 <div class="button-row">
                     <button id="btnAddEdge" class="primary">Add Edge</button>
@@ -501,6 +528,10 @@
             <!-- View / Behavior -->
             <div class="section">
                 <h3>View & Behavior</h3>
+
+                <div id="viewStateIndicator" class="view-state-indicator">
+                    Showing: <strong><span id="viewStateText">All nodes</span></strong>
+                </div>
 
                 <div id="isolateSelectedSummary" class="small" style="margin-bottom:4px;">
                     Selected for isolate: <strong><span id="isolateNodeDisplay">None</span></strong>
@@ -521,7 +552,7 @@
 
                 <label for="sortMethod" class="small">Layout method:</label>
                 <select id="sortMethod">
-                    <option value="directed">Hierarchical (vis default)</option>
+                    <option value="directed">Hierarchical (by type order)</option>
                     <option value="alpha">Network (force-directed)</option>
                 </select>
 
@@ -561,18 +592,23 @@
 
             <h3>Mouse Controls</h3>
             <ul>
-                <li><strong>Click node</strong>: Select for editing</li>
-                <li><strong>Double-click node</strong>: Isolate connected component</li>
-                <li><strong>Double-click isolated node</strong>: Show all nodes</li>
                 <li><strong>Drag node</strong>: Reposition</li>
                 <li><strong>Scroll</strong>: Zoom in/out</li>
                 <li><strong>Drag background</strong>: Pan view</li>
             </ul>
 
+            <h3>Keyboard + Mouse (Nodes)</h3>
+            <ul>
+                <li><strong>Click node</strong>: Select and focus on the node</li>
+                <li><strong>Click type chip</strong>: Focus on first node of that type</li>
+                <li><strong>Double-click node</strong>: Isolate its connected component</li>
+                <li><strong>Double-click isolated node</strong>: Show all nodes</li>
+            </ul>
+
             <h3>Keyboard + Mouse (Edges)</h3>
             <ul>
                 <li><kbd>Shift</kbd> + <strong>click node</strong>: Start edge creation (node highlights)</li>
-                <li><kbd>Shift</kbd> + <strong>click second node</strong>: Complete edge</li>
+                <li><kbd>Shift</kbd> + <strong>click second node</strong>: Complete edge (focuses on target)</li>
                 <li><kbd>Shift</kbd> + <strong>click same node</strong>: Cancel edge creation</li>
                 <li><kbd>Delete</kbd> or <kbd>Backspace</kbd> + <strong>click edge</strong>: Delete edge</li>
             </ul>
@@ -675,15 +711,25 @@
     }
 
     function updateTypeUI() {
-        // Update legend
+        // Update legend with color-coded chips
         const legendEl = document.querySelector('#causal-editor #typeLegend');
         legendEl.innerHTML = '';
         nodeTypes.forEach(function(info, name) {
             const span = document.createElement('span');
             span.className = 'tag';
-            span.style.borderColor = info.color;
-            span.style.color = info.color;
+            span.style.backgroundColor = info.color;
+            span.style.color = '#ffffff';
             span.textContent = name;
+            span.title = 'Click to find first "' + name + '" node';
+            span.addEventListener('click', function() {
+                // Find first node of this type and focus on it
+                const nodes = nodesData.get({ filter: function(n) { return n.type === name; } });
+                if (nodes.length > 0) {
+                    const nodeId = nodes[0].id;
+                    selectNodeInUI(nodeId);
+                    focusOnNode(nodeId);
+                }
+            });
             legendEl.appendChild(span);
         });
 
@@ -809,6 +855,26 @@
         return slug;
     }
 
+    // Focus the network view on a specific node
+    function focusOnNode(nodeId, options) {
+        if (!network || !networkNodes) return;
+        const node = networkNodes.get(nodeId);
+        if (!node) return;
+
+        const opts = options || {};
+        const scale = opts.scale || 1.2;
+        const animate = opts.animate !== false;
+
+        network.selectNodes([nodeId]);
+        network.focus(nodeId, {
+            scale: scale,
+            animation: animate ? {
+                duration: 400,
+                easingFunction: 'easeInOutQuad'
+            } : false
+        });
+    }
+
     // --- Drawing & visibility ---
 
     function drawNetwork(viewNodesArr, viewEdgesArr) {
@@ -832,7 +898,8 @@
                     treeSpacing: 200,
                     blockShifting: true,
                     edgeMinimization: true,
-                    parentCentralization: true
+                    parentCentralization: true,
+                    shakeTowards: 'roots'
                 }
             } : {},
             physics: useHierarchical ? { enabled: false } : {
@@ -868,8 +935,14 @@
                 const edgeId = params.edges[0];
                 const e = networkEdges.get(edgeId);
                 if (e) {
+                    // Update hidden inputs
                     edgeFromEl.value = String(e.from);
                     edgeToEl.value = String(e.to);
+                    // Update visible inputs with node labels
+                    const fromNode = nodesData.get(e.from);
+                    const toNode = nodesData.get(e.to);
+                    edgeFromInputEl.value = fromNode ? (fromNode.rawLabel || fromNode.label) : e.from;
+                    edgeToInputEl.value = toNode ? (toNode.rawLabel || toNode.label) : e.to;
                 }
 
                 if (deletePressed) {
@@ -884,7 +957,10 @@
             }
 
             if (params.nodes && params.nodes.length) {
-                selectNodeInUI(params.nodes[0]);
+                const nodeId = params.nodes[0];
+                selectNodeInUI(nodeId);
+                // Focus on the clicked node
+                focusOnNode(nodeId);
             } else {
                 clearSelectedNodeInUI();
             }
@@ -978,17 +1054,28 @@
             if (visible) visibleNodeIds.add(id);
         });
 
+        // Build type-to-level mapping based on type order in the Map
+        const typeToLevel = new Map();
+        let levelIndex = 0;
+        nodeTypes.forEach(function(info, typeName) {
+            typeToLevel.set(typeName, levelIndex);
+            levelIndex++;
+        });
+
         const viewNodesArr = [];
         nodesData.get().forEach(function(n) {
             if (!visibleNodeIds.has(n.id)) return;
             const baseColor = n.baseColor || getTypeColor(n.type);
+            // Assign level based on type order for hierarchical layout
+            const level = typeToLevel.has(n.type) ? typeToLevel.get(n.type) : levelIndex;
             viewNodesArr.push({
                 id: n.id,
                 label: n.label,
                 rawLabel: n.rawLabel,
                 type: n.type,
                 baseColor: baseColor,
-                color: baseColor
+                color: baseColor,
+                level: level
             });
         });
 
@@ -1047,6 +1134,12 @@
         isolatedNodeId = selectedNodeId;
 
         applyVisibility();
+        updateViewStateIndicator();
+
+        // Refocus on the isolated node after the graph redraws
+        setTimeout(function() {
+            focusOnNode(isolatedNodeId);
+        }, 150);
     }
 
     function showAll() {
@@ -1054,6 +1147,19 @@
         isolateSet = null;
         isolatedNodeId = null;
         applyVisibility();
+        updateViewStateIndicator();
+
+        // Zoom out to fit all nodes after showing all
+        setTimeout(function() {
+            if (network) {
+                network.fit({
+                    animation: {
+                        duration: 400,
+                        easingFunction: 'easeInOutQuad'
+                    }
+                });
+            }
+        }, 150);
     }
 
     // --- Edge helpers ---
@@ -1092,6 +1198,11 @@
         isDirty = true;
         refreshNodeSelects();
         applyVisibility();
+        // Focus on the target node after creating the edge
+        setTimeout(function() {
+            selectNodeInUI(toId);
+            focusOnNode(toId);
+        }, 100);
     }
 
     function handleEdgeDeleteClick(edgeIds) {
@@ -1118,6 +1229,10 @@
 
     const edgeFromEl = document.querySelector('#causal-editor #edgeFrom');
     const edgeToEl = document.querySelector('#causal-editor #edgeTo');
+    const edgeFromInputEl = document.querySelector('#causal-editor #edgeFromInput');
+    const edgeToInputEl = document.querySelector('#causal-editor #edgeToInput');
+    const edgeFromResultsEl = document.querySelector('#causal-editor #edgeFromResults');
+    const edgeToResultsEl = document.querySelector('#causal-editor #edgeToResults');
 
     const sortMethodEl = document.querySelector('#causal-editor #sortMethod');
     const isolateNodeDisplayEl = document.querySelector('#causal-editor #isolateNodeDisplay');
@@ -1167,6 +1282,11 @@
         isDirty = true;
         selectedNodeId = null;
         clearSelectedNodeInUI();
+        // Clear edge editor inputs
+        edgeFromEl.value = '';
+        edgeToEl.value = '';
+        edgeFromInputEl.value = '';
+        edgeToInputEl.value = '';
         refreshNodeSelects();
         updateTypeUI();
 
@@ -1175,6 +1295,7 @@
         isolatedNodeId = null;
 
         applyVisibility();
+        updateViewStateIndicator();
     });
 
     document.querySelector('#causal-editor #btnExportNodesCSV').addEventListener('click', function() {
@@ -1241,6 +1362,10 @@
         selectedNodeId = id;
         selectNodeInUI(id);
         applyVisibility();
+        // Focus on the new node after the graph is redrawn
+        setTimeout(function() {
+            focusOnNode(id);
+        }, 100);
     });
 
     document.querySelector('#causal-editor #btnUpdateNode').addEventListener('click', function() {
@@ -1271,6 +1396,10 @@
         refreshNodeSelects();
         selectNodeInUI(node.id);
         applyVisibility();
+        // Maintain focus on the updated node
+        setTimeout(function() {
+            focusOnNode(node.id);
+        }, 100);
     });
 
     document.querySelector('#causal-editor #btnDeleteNode').addEventListener('click', function() {
@@ -1317,8 +1446,18 @@
 
         edgesData.add({ from: fromId, to: toId, color: '#666666' });
         isDirty = true;
+        // Clear edge inputs after successful add
+        edgeFromEl.value = '';
+        edgeToEl.value = '';
+        edgeFromInputEl.value = '';
+        edgeToInputEl.value = '';
         refreshNodeSelects();
         applyVisibility();
+        // Focus on the target node after creating the edge
+        setTimeout(function() {
+            selectNodeInUI(toId);
+            focusOnNode(toId);
+        }, 100);
     });
 
     document.querySelector('#causal-editor #btnDeleteEdge').addEventListener('click', function() {
@@ -1341,6 +1480,11 @@
         if (!confirm('Delete edge(s) between the selected nodes?')) return;
         edgesData.remove(toDelete);
         isDirty = true;
+        // Clear edge inputs after successful delete
+        edgeFromEl.value = '';
+        edgeToEl.value = '';
+        edgeFromInputEl.value = '';
+        edgeToInputEl.value = '';
         refreshNodeSelects();
         applyVisibility();
     });
@@ -1380,7 +1524,10 @@
             isolateNodeDisplayEl.textContent = node.rawLabel || node.label || id;
         }
 
-        if (!edgeFromEl.value) edgeFromEl.value = id;
+        if (!edgeFromEl.value) {
+            edgeFromEl.value = id;
+            edgeFromInputEl.value = node.rawLabel || node.label || id;
+        }
     }
 
     function clearSelectedNodeInUI() {
@@ -1389,27 +1536,32 @@
         if (isolateNodeDisplayEl) isolateNodeDisplayEl.textContent = 'None';
     }
 
+    function updateViewStateIndicator() {
+        const indicator = document.querySelector('#causal-editor #viewStateIndicator');
+        const textEl = document.querySelector('#causal-editor #viewStateText');
+        if (!indicator || !textEl) return;
+
+        if (isIsolated && isolatedNodeId) {
+            const node = nodesData.get(isolatedNodeId);
+            const nodeName = node ? (node.rawLabel || node.label) : isolatedNodeId;
+            textEl.textContent = 'Isolated: ' + nodeName;
+            indicator.classList.add('isolated');
+        } else {
+            textEl.textContent = 'All nodes';
+            indicator.classList.remove('isolated');
+        }
+    }
+
     function refreshNodeSelects() {
-        const nodes = nodesData.get().slice().sort(function(a, b) {
-            const la = (a.rawLabel || a.label || '').toLowerCase();
-            const lb = (b.rawLabel || b.label || '').toLowerCase();
-            if (la < lb) return -1;
-            if (la > lb) return 1;
-            return 0;
-        });
-        [edgeFromEl, edgeToEl].forEach(function(sel) {
-            const current = sel.value;
-            sel.innerHTML = '<option value="">-- select --</option>';
-            nodes.forEach(function(n) {
-                const opt = document.createElement('option');
-                opt.value = n.id;
-                opt.textContent = n.rawLabel || n.label || n.id;
-                sel.appendChild(opt);
-            });
-            if (current && nodes.some(function(n) { return String(n.id) === current; })) {
-                sel.value = current;
-            }
-        });
+        // Validate that selected edge nodes still exist
+        if (edgeFromEl.value && !nodesData.get(edgeFromEl.value)) {
+            edgeFromEl.value = '';
+            edgeFromInputEl.value = '';
+        }
+        if (edgeToEl.value && !nodesData.get(edgeToEl.value)) {
+            edgeToEl.value = '';
+            edgeToInputEl.value = '';
+        }
     }
 
     // --- CSV Import/Export ---
@@ -1557,6 +1709,7 @@
         isolatedNodeId = null;
 
         applyVisibility();
+        updateViewStateIndicator();
 
         const nodeCount = nodesData.get().length;
         const edgeCount = edgesData.get().length;
@@ -1733,6 +1886,132 @@
             updateSearchResults(nodeSearchEl.value.trim());
         }
     });
+
+    // --- Edge Editor Typeahead ---
+
+    function setupEdgeTypeahead(inputEl, hiddenEl, resultsEl) {
+        let highlightIndex = -1;
+
+        function updateResults(query) {
+            resultsEl.innerHTML = '';
+            highlightIndex = -1;
+
+            if (!query || query.length < 1) {
+                resultsEl.classList.remove('active');
+                return;
+            }
+
+            const lowerQuery = query.toLowerCase();
+            const matches = nodesData.get().filter(function(n) {
+                const label = (n.rawLabel || n.label || '').toLowerCase();
+                return label.includes(lowerQuery);
+            }).slice(0, 15);
+
+            if (matches.length === 0) {
+                resultsEl.classList.remove('active');
+                return;
+            }
+
+            matches.forEach(function(n) {
+                const div = document.createElement('div');
+                div.className = 'search-result-item';
+                div.dataset.nodeId = n.id;
+
+                const dot = document.createElement('span');
+                dot.className = 'search-result-dot';
+                dot.style.backgroundColor = getTypeColor(n.type);
+
+                const label = document.createElement('span');
+                label.className = 'search-result-label';
+                label.textContent = n.rawLabel || n.label;
+
+                const type = document.createElement('span');
+                type.className = 'search-result-type';
+                type.textContent = n.type || '';
+
+                div.appendChild(dot);
+                div.appendChild(label);
+                div.appendChild(type);
+
+                div.addEventListener('click', function() {
+                    selectResult(n.id, n.rawLabel || n.label);
+                });
+
+                resultsEl.appendChild(div);
+            });
+
+            resultsEl.classList.add('active');
+        }
+
+        function selectResult(nodeId, nodeLabel) {
+            hiddenEl.value = nodeId;
+            inputEl.value = nodeLabel;
+            resultsEl.classList.remove('active');
+            resultsEl.innerHTML = '';
+        }
+
+        function highlightResult(index) {
+            const items = resultsEl.querySelectorAll('.search-result-item');
+            items.forEach(function(item, i) {
+                if (i === index) {
+                    item.classList.add('highlighted');
+                    item.scrollIntoView({ block: 'nearest' });
+                } else {
+                    item.classList.remove('highlighted');
+                }
+            });
+        }
+
+        inputEl.addEventListener('input', function() {
+            // Clear the hidden value when typing (will be set on selection)
+            hiddenEl.value = '';
+            updateResults(inputEl.value.trim());
+        });
+
+        inputEl.addEventListener('keydown', function(e) {
+            const items = resultsEl.querySelectorAll('.search-result-item');
+            if (!items.length) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                highlightIndex = Math.min(highlightIndex + 1, items.length - 1);
+                highlightResult(highlightIndex);
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                highlightIndex = Math.max(highlightIndex - 1, 0);
+                highlightResult(highlightIndex);
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (highlightIndex >= 0 && items[highlightIndex]) {
+                    const nodeId = items[highlightIndex].dataset.nodeId;
+                    const node = nodesData.get(nodeId);
+                    selectResult(nodeId, node ? (node.rawLabel || node.label) : nodeId);
+                } else if (items.length > 0) {
+                    const nodeId = items[0].dataset.nodeId;
+                    const node = nodesData.get(nodeId);
+                    selectResult(nodeId, node ? (node.rawLabel || node.label) : nodeId);
+                }
+            } else if (e.key === 'Escape') {
+                resultsEl.classList.remove('active');
+            }
+        });
+
+        inputEl.addEventListener('blur', function() {
+            setTimeout(function() {
+                resultsEl.classList.remove('active');
+            }, 200);
+        });
+
+        inputEl.addEventListener('focus', function() {
+            if (inputEl.value.trim() && !hiddenEl.value) {
+                updateResults(inputEl.value.trim());
+            }
+        });
+    }
+
+    // Initialize edge typeaheads
+    setupEdgeTypeahead(edgeFromInputEl, edgeFromEl, edgeFromResultsEl);
+    setupEdgeTypeahead(edgeToInputEl, edgeToEl, edgeToResultsEl);
 
     // Help modal
     const helpModal = document.querySelector('#causal-editor #helpModal');
