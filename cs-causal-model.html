@@ -389,6 +389,87 @@
         line-height: 1 !important;
     }
 
+    #causal-editor .attr-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin-bottom: 4px !important;
+        font-size: 12px !important;
+    }
+
+    #causal-editor .attr-item span {
+        flex: 1 !important;
+    }
+
+    #causal-editor .attr-value-row {
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        margin-bottom: 6px !important;
+    }
+
+    #causal-editor .attr-value-row label {
+        min-width: 80px !important;
+        margin-bottom: 0 !important;
+        font-weight: 500 !important;
+    }
+
+    #causal-editor .attr-value-row input {
+        flex: 1 !important;
+        margin-bottom: 0 !important;
+    }
+
+    #causal-editor .rule-list {
+        margin: 4px 0 8px 0 !important;
+        max-height: 100px !important;
+        overflow-y: auto !important;
+    }
+
+    #causal-editor .rule-item {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        font-size: 11px !important;
+        padding: 2px 4px !important;
+        background: #f5f5f5 !important;
+        border-radius: 3px !important;
+        margin-bottom: 3px !important;
+    }
+
+    #causal-editor .rule-item span {
+        flex: 1 !important;
+    }
+
+    #causal-editor .rule-form {
+        display: flex !important;
+        align-items: center !important;
+        gap: 4px !important;
+        flex-wrap: wrap !important;
+        font-size: 11px !important;
+    }
+
+    #causal-editor .rule-form select,
+    #causal-editor .rule-form input[type="text"] {
+        padding: 2px 4px !important;
+        font-size: 11px !important;
+        margin-bottom: 0 !important;
+    }
+
+    #causal-editor .small-btn {
+        padding: 2px 8px !important;
+        font-size: 12px !important;
+        cursor: pointer !important;
+    }
+
+    #causal-editor .color-swatch {
+        display: inline-block !important;
+        width: 12px !important;
+        height: 12px !important;
+        border-radius: 2px !important;
+        border: 1px solid #999 !important;
+        vertical-align: middle !important;
+    }
+
     @media (max-width: 900px) {
         #causal-editor #app {
             flex-direction: column !important;
@@ -428,11 +509,11 @@
             <div class="section">
                 <h3>Import / Export CSV</h3>
                 <div class="inline-file">
-                    <label for="importNodesFile">Upload nodes.csv (Node,Type):</label>
+                    <label for="importNodesFile">Upload nodes.csv (Node,Type,Attr1,Attr2,...):</label>
                     <input type="file" id="importNodesFile" accept=".csv,.txt">
                 </div>
                 <div class="inline-file">
-                    <label for="importEdgesFile">Upload edges.csv (Node 1,Node 2):</label>
+                    <label for="importEdgesFile">Upload edges.csv (Node 1,Node 2,Attr1,Attr2,...):</label>
                     <input type="file" id="importEdgesFile" accept=".csv,.txt">
                 </div>
                 <div class="button-row">
@@ -455,6 +536,77 @@
                 <input type="text" id="newTypeName" placeholder="Type name...">
                 <div class="button-row">
                     <button id="btnAddType" class="primary">Add Type</button>
+                </div>
+            </div>
+
+            <!-- Manage Attributes -->
+            <div class="section">
+                <h3>Manage Attributes</h3>
+                <label for="attrTargetType">Attribute applies to:</label>
+                <select id="attrTargetType">
+                    <option value="node">Nodes</option>
+                    <option value="edge">Edges</option>
+                </select>
+
+                <div id="attrList">
+                    <!-- Dynamic attribute list will be rendered here -->
+                </div>
+
+                <label for="newAttrName">Add new attribute:</label>
+                <input type="text" id="newAttrName" placeholder="Attribute name...">
+                <div class="button-row">
+                    <button id="btnAddAttr" class="primary">Add Attribute</button>
+                </div>
+            </div>
+
+            <!-- Style Rules -->
+            <div class="section">
+                <h3>Style Rules</h3>
+
+                <div style="margin-bottom:10px;">
+                    <strong>Node Shape Rules</strong>
+                    <div id="nodeShapeRulesList" class="rule-list">
+                        <div class="small">No shape rules defined.</div>
+                    </div>
+                    <div class="rule-form">
+                        <select id="nodeShapeAttr">
+                            <option value="">-- attribute --</option>
+                        </select>
+                        <span>=</span>
+                        <input type="text" id="nodeShapeValue" placeholder="value" style="width:60px;">
+                        <span>→</span>
+                        <select id="nodeShapeShape">
+                            <option value="dot">dot</option>
+                            <option value="diamond">diamond</option>
+                            <option value="star">star</option>
+                            <option value="triangle">triangle</option>
+                            <option value="triangleDown">triangleDown</option>
+                            <option value="hexagon">hexagon</option>
+                            <option value="square">square</option>
+                            <option value="box">box</option>
+                            <option value="ellipse">ellipse</option>
+                        </select>
+                        <button id="btnAddNodeShapeRule" class="small-btn">+</button>
+                    </div>
+                    <div class="small">Select attribute, enter value, choose shape, click <strong>+</strong> to add rule.</div>
+                </div>
+
+                <div>
+                    <strong>Edge Color Rules</strong>
+                    <div id="edgeColorRulesList" class="rule-list">
+                        <div class="small">No color rules defined.</div>
+                    </div>
+                    <div class="rule-form">
+                        <select id="edgeColorAttr">
+                            <option value="">-- attribute --</option>
+                        </select>
+                        <span>=</span>
+                        <input type="text" id="edgeColorValue" placeholder="value" style="width:60px;">
+                        <span>→</span>
+                        <input type="color" id="edgeColorColor" value="#ff0000" style="width:40px;height:24px;">
+                        <button id="btnAddEdgeColorRule" class="small-btn">+</button>
+                    </div>
+                    <div class="small">Select attribute, enter value, pick color, click <strong>+</strong> to add rule.</div>
                 </div>
             </div>
 
@@ -493,7 +645,16 @@
                     <button id="btnUpdateNode">Update Selected Node</button>
                     <button id="btnDeleteNode" class="danger">Delete Selected Node</button>
                 </div>
-                <div class="small">
+
+                <div id="nodeAttrEditor" style="margin-top:8px; padding-top:8px; border-top:1px solid #ddd;">
+                    <label>Node Attributes</label>
+                    <div id="nodeAttrValues">
+                        <!-- Dynamic attribute value editors will be rendered here -->
+                        <div class="small">No attributes defined. Add attributes in "Manage Attributes".</div>
+                    </div>
+                </div>
+
+                <div class="small" style="margin-top:4px;">
                     Click a node in the graph to select it for editing.
                 </div>
             </div>
@@ -501,7 +662,10 @@
             <!-- Edge editor -->
             <div class="section">
                 <h3>Edge Editor</h3>
-                <label for="edgeFromInput">Node A</label>
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                    <label for="edgeFromInput" style="margin-bottom:0;">Node A</label>
+                    <button id="btnFocusNodeA" class="small-btn">Focus</button>
+                </div>
                 <div style="position:relative;">
                     <input type="text" id="edgeFromInput" placeholder="Type to search..." autocomplete="off">
                     <input type="hidden" id="edgeFrom">
@@ -517,11 +681,22 @@
 
                 <div class="button-row">
                     <button id="btnAddEdge" class="primary">Add Edge</button>
+                    <button id="btnUpdateEdge">Update Edge</button>
                     <button id="btnDeleteEdge" class="danger">Delete Edge</button>
                 </div>
-                <div class="small">
+
+                <div id="edgeAttrEditor" style="margin-top:8px; padding-top:8px; border-top:1px solid #ddd;">
+                    <label>Edge Attributes</label>
+                    <div id="edgeAttrValues">
+                        <!-- Dynamic attribute value editors will be rendered here -->
+                        <div class="small">No attributes defined. Add attributes in "Manage Attributes".</div>
+                    </div>
+                </div>
+
+                <div class="small" style="margin-top:4px;">
                     Hold <strong>Shift</strong> and click two nodes to create an edge.<br>
-                    Hold <strong>Delete</strong> and click an edge to delete it.
+                    Hold <strong>Delete</strong> and click an edge to delete it.<br>
+                    Click an edge to select and edit its attributes.
                 </div>
             </div>
 
@@ -576,10 +751,29 @@
 
             <h3>Import / Export</h3>
             <ul>
-                <li><strong>nodes.csv</strong>: Two columns - Node, Type</li>
-                <li><strong>edges.csv</strong>: Two columns - Node 1, Node 2</li>
-                <li>Upload both files and click "Import CSV Files"</li>
-                <li>Types are auto-detected and assigned colors</li>
+                <li><strong>nodes.csv</strong>: Columns - Node, Type, then attribute columns</li>
+                <li><strong>edges.csv</strong>: Columns - Node 1, Node 2, then attribute columns</li>
+                <li>Each attribute is its own column (header = attribute name)</li>
+                <li>Upload files and click "Import CSV Files"</li>
+                <li>Types and attributes are auto-detected from headers</li>
+                <li>Hover over nodes/edges to see their attributes</li>
+            </ul>
+
+            <h3>Manage Attributes</h3>
+            <ul>
+                <li>Switch between Node and Edge attributes with the dropdown</li>
+                <li>Add new attributes - creates new columns in CSV export</li>
+                <li>Delete attributes - removes from all nodes/edges</li>
+                <li>Edit attribute values in the Edit Node or Edge Editor sections</li>
+            </ul>
+
+            <h3>Style Rules</h3>
+            <ul>
+                <li><strong>Node Shape Rules:</strong> Change node shapes based on attribute values</li>
+                <li><strong>Edge Color Rules:</strong> Change edge colors based on attribute values</li>
+                <li>Rules are applied in order - first match wins</li>
+                <li>Add rules: select attribute, enter value to match, choose shape/color</li>
+                <li>Click 'x' to delete a rule</li>
             </ul>
 
             <h3>Find Node</h3>
@@ -645,6 +839,18 @@
     let nodeTypes = new Map();
     let colorIndex = 0;
 
+    // Attribute schemas: arrays of attribute names
+    let nodeAttributes = [];  // e.g., ['priority', 'owner', 'status']
+    let edgeAttributes = [];  // e.g., ['weight', 'confidence']
+
+    // Style rules: maps attribute+value to visual property
+    // Format: { attribute: string, value: string, style: string (color/shape) }
+    let nodeShapeRules = [];  // e.g., [{ attribute: 'status', value: 'active', shape: 'star' }]
+    let edgeColorRules = [];  // e.g., [{ attribute: 'weight', value: 'high', color: '#ff0000' }]
+
+    // Available shapes for nodes (vis.js supported shapes)
+    const availableShapes = ['dot', 'diamond', 'star', 'triangle', 'triangleDown', 'hexagon', 'square', 'box', 'ellipse', 'circle', 'database'];
+
     let nodesData = new vis.DataSet([]);
     let edgesData = new vis.DataSet([]);
 
@@ -653,6 +859,7 @@
     let network = null;
 
     let selectedNodeId = null;
+    let selectedEdgeId = null;
     let isolatedNodeId = null;
     let edgeCreationSourceId = null;
     let deletePressed = false;
@@ -821,6 +1028,352 @@
         filterContainer.appendChild(orphansLabelNew);
     }
 
+    // --- Attribute Management ---
+
+    function addAttribute(targetType, attrName) {
+        if (!attrName || !attrName.trim()) return false;
+        attrName = attrName.trim();
+
+        if (targetType === 'node') {
+            if (nodeAttributes.includes(attrName)) return false;
+            nodeAttributes.push(attrName);
+        } else {
+            if (edgeAttributes.includes(attrName)) return false;
+            edgeAttributes.push(attrName);
+        }
+        updateAttributeListUI();
+        updateNodeAttrValuesUI();
+        updateEdgeAttrValuesUI();
+        updateStyleRuleAttributeDropdowns();
+        return true;
+    }
+
+    function removeAttribute(targetType, attrName) {
+        if (targetType === 'node') {
+            const idx = nodeAttributes.indexOf(attrName);
+            if (idx === -1) return;
+            // Remove attribute values from all nodes
+            nodesData.get().forEach(function(n) {
+                if (n.attributes && n.attributes[attrName] !== undefined) {
+                    const attrs = Object.assign({}, n.attributes);
+                    delete attrs[attrName];
+                    nodesData.update({ id: n.id, attributes: attrs });
+                }
+            });
+            nodeAttributes.splice(idx, 1);
+            // Remove any shape rules using this attribute
+            nodeShapeRules = nodeShapeRules.filter(function(rule) {
+                return rule.attribute !== attrName;
+            });
+            updateNodeShapeRulesUI();
+        } else {
+            const idx = edgeAttributes.indexOf(attrName);
+            if (idx === -1) return;
+            // Remove attribute values from all edges
+            edgesData.get().forEach(function(e) {
+                if (e.attributes && e.attributes[attrName] !== undefined) {
+                    const attrs = Object.assign({}, e.attributes);
+                    delete attrs[attrName];
+                    edgesData.update({ id: e.id, attributes: attrs });
+                }
+            });
+            edgeAttributes.splice(idx, 1);
+            // Remove any color rules using this attribute
+            edgeColorRules = edgeColorRules.filter(function(rule) {
+                return rule.attribute !== attrName;
+            });
+            updateEdgeColorRulesUI();
+        }
+        isDirty = true;
+        updateAttributeListUI();
+        updateNodeAttrValuesUI();
+        updateEdgeAttrValuesUI();
+        updateStyleRuleAttributeDropdowns();
+        applyVisibility();
+    }
+
+    function updateAttributeListUI() {
+        const attrListEl = document.querySelector('#causal-editor #attrList');
+        const targetType = document.querySelector('#causal-editor #attrTargetType').value;
+        const attrs = targetType === 'node' ? nodeAttributes : edgeAttributes;
+
+        attrListEl.innerHTML = '';
+
+        if (attrs.length === 0) {
+            attrListEl.innerHTML = '<div class="small">No attributes defined for ' + targetType + 's.</div>';
+            return;
+        }
+
+        attrs.forEach(function(attrName) {
+            const div = document.createElement('div');
+            div.className = 'attr-item';
+
+            const nameSpan = document.createElement('span');
+            nameSpan.textContent = attrName;
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'type-delete-btn danger';
+            deleteBtn.textContent = 'x';
+            deleteBtn.onclick = function() {
+                if (confirm('Delete attribute "' + attrName + '" and all its values?')) {
+                    removeAttribute(targetType, attrName);
+                }
+            };
+
+            div.appendChild(nameSpan);
+            div.appendChild(deleteBtn);
+            attrListEl.appendChild(div);
+        });
+    }
+
+    function updateNodeAttrValuesUI() {
+        const containerEl = document.querySelector('#causal-editor #nodeAttrValues');
+        containerEl.innerHTML = '';
+
+        if (nodeAttributes.length === 0) {
+            containerEl.innerHTML = '<div class="small">No attributes defined. Add attributes in "Manage Attributes".</div>';
+            return;
+        }
+
+        if (!selectedNodeId) {
+            containerEl.innerHTML = '<div class="small">Select a node to edit its attributes.</div>';
+            return;
+        }
+
+        const node = nodesData.get(selectedNodeId);
+        if (!node) {
+            containerEl.innerHTML = '<div class="small">Select a node to edit its attributes.</div>';
+            return;
+        }
+
+        const attrs = node.attributes || {};
+
+        nodeAttributes.forEach(function(attrName) {
+            const row = document.createElement('div');
+            row.className = 'attr-value-row';
+
+            const label = document.createElement('label');
+            label.textContent = attrName + ':';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = attrs[attrName] || '';
+            input.dataset.attrName = attrName;
+            input.placeholder = 'Enter value...';
+
+            row.appendChild(label);
+            row.appendChild(input);
+            containerEl.appendChild(row);
+        });
+    }
+
+    function updateEdgeAttrValuesUI() {
+        const containerEl = document.querySelector('#causal-editor #edgeAttrValues');
+        containerEl.innerHTML = '';
+
+        if (edgeAttributes.length === 0) {
+            containerEl.innerHTML = '<div class="small">No attributes defined. Add attributes in "Manage Attributes".</div>';
+            return;
+        }
+
+        const fromId = document.querySelector('#causal-editor #edgeFrom').value;
+        const toId = document.querySelector('#causal-editor #edgeTo').value;
+
+        if (!fromId || !toId) {
+            containerEl.innerHTML = '<div class="small">Select an edge to edit its attributes.</div>';
+            return;
+        }
+
+        // Find the edge
+        const edges = edgesData.get({
+            filter: function(e) {
+                return (e.from === fromId && e.to === toId) ||
+                       (e.from === toId && e.to === fromId);
+            }
+        });
+
+        if (edges.length === 0) {
+            containerEl.innerHTML = '<div class="small">No edge exists between selected nodes.</div>';
+            return;
+        }
+
+        const edge = edges[0];
+        selectedEdgeId = edge.id;
+        const attrs = edge.attributes || {};
+
+        edgeAttributes.forEach(function(attrName) {
+            const row = document.createElement('div');
+            row.className = 'attr-value-row';
+
+            const label = document.createElement('label');
+            label.textContent = attrName + ':';
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = attrs[attrName] || '';
+            input.dataset.attrName = attrName;
+            input.placeholder = 'Enter value...';
+
+            row.appendChild(label);
+            row.appendChild(input);
+            containerEl.appendChild(row);
+        });
+    }
+
+    function getNodeAttrValuesFromUI() {
+        const containerEl = document.querySelector('#causal-editor #nodeAttrValues');
+        const inputs = containerEl.querySelectorAll('input[data-attr-name]');
+        const attrs = {};
+        inputs.forEach(function(input) {
+            const val = input.value.trim();
+            if (val) {
+                attrs[input.dataset.attrName] = val;
+            }
+        });
+        return attrs;
+    }
+
+    function getEdgeAttrValuesFromUI() {
+        const containerEl = document.querySelector('#causal-editor #edgeAttrValues');
+        const inputs = containerEl.querySelectorAll('input[data-attr-name]');
+        const attrs = {};
+        inputs.forEach(function(input) {
+            const val = input.value.trim();
+            if (val) {
+                attrs[input.dataset.attrName] = val;
+            }
+        });
+        return attrs;
+    }
+
+    // Format attributes object for tooltip display
+    function formatAttributesTooltip(attrs) {
+        if (!attrs || typeof attrs !== 'object') return null;
+        const keys = Object.keys(attrs);
+        if (keys.length === 0) return null;
+        return keys.map(function(key) {
+            return key + ': ' + attrs[key];
+        }).join('\n');
+    }
+
+    // --- Style Rules Management ---
+
+    function updateStyleRuleAttributeDropdowns() {
+        // Update node shape attribute dropdown
+        const nodeShapeAttrEl = document.querySelector('#causal-editor #nodeShapeAttr');
+        nodeShapeAttrEl.innerHTML = '<option value="">-- attribute --</option>';
+        nodeAttributes.forEach(function(attr) {
+            const opt = document.createElement('option');
+            opt.value = attr;
+            opt.textContent = attr;
+            nodeShapeAttrEl.appendChild(opt);
+        });
+
+        // Update edge color attribute dropdown
+        const edgeColorAttrEl = document.querySelector('#causal-editor #edgeColorAttr');
+        edgeColorAttrEl.innerHTML = '<option value="">-- attribute --</option>';
+        edgeAttributes.forEach(function(attr) {
+            const opt = document.createElement('option');
+            opt.value = attr;
+            opt.textContent = attr;
+            edgeColorAttrEl.appendChild(opt);
+        });
+    }
+
+    function updateNodeShapeRulesUI() {
+        const listEl = document.querySelector('#causal-editor #nodeShapeRulesList');
+        listEl.innerHTML = '';
+
+        if (nodeShapeRules.length === 0) {
+            listEl.innerHTML = '<div class="small">No shape rules defined.</div>';
+            return;
+        }
+
+        nodeShapeRules.forEach(function(rule, idx) {
+            const div = document.createElement('div');
+            div.className = 'rule-item';
+
+            const textSpan = document.createElement('span');
+            textSpan.textContent = rule.attribute + ' = "' + rule.value + '" → ' + rule.shape;
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'type-delete-btn danger';
+            deleteBtn.textContent = 'x';
+            deleteBtn.onclick = function() {
+                nodeShapeRules.splice(idx, 1);
+                updateNodeShapeRulesUI();
+                isDirty = true;
+                applyVisibility();
+            };
+
+            div.appendChild(textSpan);
+            div.appendChild(deleteBtn);
+            listEl.appendChild(div);
+        });
+    }
+
+    function updateEdgeColorRulesUI() {
+        const listEl = document.querySelector('#causal-editor #edgeColorRulesList');
+        listEl.innerHTML = '';
+
+        if (edgeColorRules.length === 0) {
+            listEl.innerHTML = '<div class="small">No color rules defined.</div>';
+            return;
+        }
+
+        edgeColorRules.forEach(function(rule, idx) {
+            const div = document.createElement('div');
+            div.className = 'rule-item';
+
+            const textSpan = document.createElement('span');
+            const swatch = document.createElement('span');
+            swatch.className = 'color-swatch';
+            swatch.style.backgroundColor = rule.color;
+            textSpan.textContent = rule.attribute + ' = "' + rule.value + '" → ';
+            textSpan.appendChild(swatch);
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'type-delete-btn danger';
+            deleteBtn.textContent = 'x';
+            deleteBtn.onclick = function() {
+                edgeColorRules.splice(idx, 1);
+                updateEdgeColorRulesUI();
+                isDirty = true;
+                applyVisibility();
+            };
+
+            div.appendChild(textSpan);
+            div.appendChild(deleteBtn);
+            listEl.appendChild(div);
+        });
+    }
+
+    function getNodeShapeFromRules(node) {
+        if (!node.attributes || typeof node.attributes !== 'object') {
+            return 'dot';
+        }
+        for (let i = 0; i < nodeShapeRules.length; i++) {
+            const rule = nodeShapeRules[i];
+            const attrValue = node.attributes[rule.attribute];
+            if (attrValue !== undefined && String(attrValue).trim() === String(rule.value).trim()) {
+                return rule.shape;
+            }
+        }
+        return 'dot';
+    }
+
+    function getEdgeColorFromRules(edge) {
+        if (!edge.attributes || typeof edge.attributes !== 'object') return '#666666';
+        for (let i = 0; i < edgeColorRules.length; i++) {
+            const rule = edgeColorRules[i];
+            const attrValue = edge.attributes[rule.attribute];
+            if (attrValue !== undefined && String(attrValue).trim() === String(rule.value).trim()) {
+                return rule.color;
+            }
+        }
+        return '#666666';
+    }
+
     // --- Helpers ---
 
     function wrapLabel(text, maxLen) {
@@ -914,13 +1467,12 @@
                 stabilization: { iterations: 150 }
             },
             nodes: {
-                shape: 'dot',
                 size: 20,
                 font: { size: 12, align: 'center', multi: 'md' },
                 scaling: { label: { enabled: true, min: 10, max: 16 } },
                 widthConstraint: { maximum: 200 }
             },
-            edges: { arrows: { to: { enabled: true, scaleFactor: 0.5 } }, color: '#666666' },
+            edges: { arrows: { to: { enabled: true, scaleFactor: 0.5 } } },
             interaction: { dragNodes: true, dragView: true, zoomView: true, hover: true }
         };
 
@@ -943,6 +1495,8 @@
                     const toNode = nodesData.get(e.to);
                     edgeFromInputEl.value = fromNode ? (fromNode.rawLabel || fromNode.label) : e.from;
                     edgeToInputEl.value = toNode ? (toNode.rawLabel || toNode.label) : e.to;
+                    // Update edge attribute values UI
+                    updateEdgeAttrValuesUI();
                 }
 
                 if (deletePressed) {
@@ -1065,28 +1619,61 @@
         const viewNodesArr = [];
         nodesData.get().forEach(function(n) {
             if (!visibleNodeIds.has(n.id)) return;
+            // Ensure attributes is always an object
+            if (!n.attributes || typeof n.attributes !== 'object') {
+                n.attributes = {};
+            }
             const baseColor = n.baseColor || getTypeColor(n.type);
             // Assign level based on type order for hierarchical layout
             const level = typeToLevel.has(n.type) ? typeToLevel.get(n.type) : levelIndex;
+            // Build tooltip with node info and attributes
+            let tooltip = (n.rawLabel || n.label) + '\nType: ' + (n.type || 'Unknown');
+            const attrTooltip = formatAttributesTooltip(n.attributes);
+            if (attrTooltip) {
+                tooltip += '\n\n' + attrTooltip;
+            }
+            // Get shape from style rules
+            const shape = getNodeShapeFromRules(n);
             viewNodesArr.push({
                 id: n.id,
                 label: n.label,
                 rawLabel: n.rawLabel,
                 type: n.type,
+                attributes: n.attributes,
                 baseColor: baseColor,
                 color: baseColor,
-                level: level
+                level: level,
+                shape: shape,
+                title: tooltip
             });
         });
 
         const viewEdgesArr = [];
         edgesData.get().forEach(function(e) {
             if (visibleNodeIds.has(e.from) && visibleNodeIds.has(e.to)) {
+                // Ensure attributes is always an object
+                if (!e.attributes || typeof e.attributes !== 'object') {
+                    e.attributes = {};
+                }
+                // Build edge tooltip
+                const fromNode = nodesData.get(e.from);
+                const toNode = nodesData.get(e.to);
+                const fromLabel = fromNode ? (fromNode.rawLabel || fromNode.label) : e.from;
+                const toLabel = toNode ? (toNode.rawLabel || toNode.label) : e.to;
+                let edgeTooltip = fromLabel + ' → ' + toLabel;
+                const edgeAttrTooltip = formatAttributesTooltip(e.attributes);
+                if (edgeAttrTooltip) {
+                    edgeTooltip += '\n\n' + edgeAttrTooltip;
+                }
+                // Get color from style rules (falls back to default)
+                const edgeColor = getEdgeColorFromRules(e);
                 viewEdgesArr.push({
                     id: e.id,
                     from: e.from,
                     to: e.to,
-                    color: e.color || '#666666'
+                    attributes: e.attributes,
+                    color: { color: edgeColor, highlight: edgeColor, hover: edgeColor },
+                    title: edgeTooltip
                 });
             }
         });
@@ -1273,14 +1860,19 @@
     });
 
     document.querySelector('#causal-editor #btnClear').addEventListener('click', function() {
-        if (!confirm('Clear all nodes, edges, and types?')) return;
+        if (!confirm('Clear all nodes, edges, types, attributes, and style rules?')) return;
         nodesData.clear();
         edgesData.clear();
         nodeTypes.clear();
+        nodeAttributes = [];
+        edgeAttributes = [];
+        nodeShapeRules = [];
+        edgeColorRules = [];
         colorIndex = 0;
         viewFilters = { onlyOrphans: false };
         isDirty = true;
         selectedNodeId = null;
+        selectedEdgeId = null;
         clearSelectedNodeInUI();
         // Clear edge editor inputs
         edgeFromEl.value = '';
@@ -1289,6 +1881,12 @@
         edgeToInputEl.value = '';
         refreshNodeSelects();
         updateTypeUI();
+        updateAttributeListUI();
+        updateNodeAttrValuesUI();
+        updateEdgeAttrValuesUI();
+        updateStyleRuleAttributeDropdowns();
+        updateNodeShapeRulesUI();
+        updateEdgeColorRulesUI();
 
         isIsolated = false;
         isolateSet = null;
@@ -1299,22 +1897,38 @@
     });
 
     document.querySelector('#causal-editor #btnExportNodesCSV').addEventListener('click', function() {
-        const rows = [['Node', 'Type']];
+        // Build header: Node, Type, then all node attributes
+        const header = ['Node', 'Type'].concat(nodeAttributes);
+        const rows = [header];
         nodesData.get().forEach(function(n) {
-            rows.push([n.rawLabel || n.label, n.type || '']);
+            const row = [n.rawLabel || n.label, n.type || ''];
+            // Add attribute values for each attribute column
+            nodeAttributes.forEach(function(attrName) {
+                const attrs = n.attributes || {};
+                row.push(attrs[attrName] || '');
+            });
+            rows.push(row);
         });
         downloadCSV(rows, 'nodes.csv');
         isDirty = false;
     });
 
     document.querySelector('#causal-editor #btnExportEdgesCSV').addEventListener('click', function() {
-        const rows = [['Node 1', 'Node 2']];
+        // Build header: Node 1, Node 2, then all edge attributes
+        const header = ['Node 1', 'Node 2'].concat(edgeAttributes);
+        const rows = [header];
         const nodeMap = {};
         nodesData.get().forEach(function(n) {
             nodeMap[n.id] = n.rawLabel || n.label;
         });
         edgesData.get().forEach(function(e) {
-            rows.push([nodeMap[e.from] || e.from, nodeMap[e.to] || e.to]);
+            const row = [nodeMap[e.from] || e.from, nodeMap[e.to] || e.to];
+            // Add attribute values for each attribute column
+            edgeAttributes.forEach(function(attrName) {
+                const attrs = e.attributes || {};
+                row.push(attrs[attrName] || '');
+            });
+            rows.push(row);
         });
         downloadCSV(rows, 'edges.csv');
         isDirty = false;
@@ -1335,6 +1949,97 @@
         isDirty = true;
     });
 
+    // Attribute management handlers
+    document.querySelector('#causal-editor #attrTargetType').addEventListener('change', function() {
+        updateAttributeListUI();
+    });
+
+    document.querySelector('#causal-editor #btnAddAttr').addEventListener('click', function() {
+        const targetType = document.querySelector('#causal-editor #attrTargetType').value;
+        const attrName = document.querySelector('#causal-editor #newAttrName').value.trim();
+        if (!attrName) {
+            alert('Please enter an attribute name.');
+            return;
+        }
+        const attrs = targetType === 'node' ? nodeAttributes : edgeAttributes;
+        if (attrs.includes(attrName)) {
+            alert('Attribute "' + attrName + '" already exists for ' + targetType + 's.');
+            return;
+        }
+        addAttribute(targetType, attrName);
+        document.querySelector('#causal-editor #newAttrName').value = '';
+        isDirty = true;
+    });
+
+    // Style rule handlers
+    document.querySelector('#causal-editor #btnAddNodeShapeRule').addEventListener('click', function() {
+        const attrEl = document.querySelector('#causal-editor #nodeShapeAttr');
+        const valueEl = document.querySelector('#causal-editor #nodeShapeValue');
+        const shapeEl = document.querySelector('#causal-editor #nodeShapeShape');
+
+        const attr = attrEl.value;
+        const value = valueEl.value.trim();
+        const shape = shapeEl.value;
+
+        if (!attr) {
+            alert('Please select an attribute.');
+            return;
+        }
+        if (!value) {
+            alert('Please enter a value to match.');
+            return;
+        }
+
+        // Check for duplicate rule
+        const exists = nodeShapeRules.some(function(r) {
+            return r.attribute === attr && r.value === value;
+        });
+        if (exists) {
+            alert('A shape rule for this attribute/value already exists.');
+            return;
+        }
+
+        nodeShapeRules.push({ attribute: attr, value: value, shape: shape });
+        updateNodeShapeRulesUI();
+        valueEl.value = '';
+        isDirty = true;
+        applyVisibility();
+    });
+
+    document.querySelector('#causal-editor #btnAddEdgeColorRule').addEventListener('click', function() {
+        const attrEl = document.querySelector('#causal-editor #edgeColorAttr');
+        const valueEl = document.querySelector('#causal-editor #edgeColorValue');
+        const colorEl = document.querySelector('#causal-editor #edgeColorColor');
+
+        const attr = attrEl.value;
+        const value = valueEl.value.trim();
+        const color = colorEl.value;
+
+        if (!attr) {
+            alert('Please select an attribute.');
+            return;
+        }
+        if (!value) {
+            alert('Please enter a value to match.');
+            return;
+        }
+
+        // Check for duplicate rule
+        const exists = edgeColorRules.some(function(r) {
+            return r.attribute === attr && r.value === value;
+        });
+        if (exists) {
+            alert('A color rule for this attribute/value already exists.');
+            return;
+        }
+
+        edgeColorRules.push({ attribute: attr, value: value, color: color });
+        updateEdgeColorRulesUI();
+        valueEl.value = '';
+        isDirty = true;
+        applyVisibility();
+    });
+
     document.querySelector('#causal-editor #btnAddNode').addEventListener('click', function() {
         const label = createNodeLabelEl.value.trim();
         const type = createNodeTypeEl.value;
@@ -1353,6 +2058,7 @@
             label: wrapLabel(label),
             rawLabel: label,
             type: type,
+            attributes: {},
             baseColor: color,
             color: color
         });
@@ -1382,12 +2088,14 @@
         const newRaw = editNodeLabelEl.value.trim() || node.rawLabel || node.label;
         const newType = editNodeTypeEl.value || node.type;
         const color = getTypeColor(newType);
+        const newAttrs = getNodeAttrValuesFromUI();
 
         nodesData.update({
             id: node.id,
             label: wrapLabel(newRaw),
             rawLabel: newRaw,
             type: newType,
+            attributes: newAttrs,
             baseColor: color,
             color: color
         });
@@ -1444,13 +2152,15 @@
             return;
         }
 
-        edgesData.add({ from: fromId, to: toId, color: '#666666' });
+        const attrs = getEdgeAttrValuesFromUI();
+        edgesData.add({ from: fromId, to: toId, attributes: attrs, color: '#666666' });
         isDirty = true;
         // Clear edge inputs after successful add
         edgeFromEl.value = '';
         edgeToEl.value = '';
         edgeFromInputEl.value = '';
         edgeToInputEl.value = '';
+        updateEdgeAttrValuesUI();
         refreshNodeSelects();
         applyVisibility();
         // Focus on the target node after creating the edge
@@ -1458,6 +2168,49 @@
             selectNodeInUI(toId);
             focusOnNode(toId);
         }, 100);
+    });
+
+    document.querySelector('#causal-editor #btnFocusNodeA').addEventListener('click', function() {
+        const fromId = edgeFromEl.value;
+        if (!fromId) {
+            alert('No Node A selected.');
+            return;
+        }
+        selectNodeInUI(fromId);
+        focusOnNode(fromId);
+    });
+
+    document.querySelector('#causal-editor #btnUpdateEdge').addEventListener('click', function() {
+        const fromId = edgeFromEl.value;
+        const toId = edgeToEl.value;
+        if (!fromId || !toId) {
+            alert('Select both nodes to update the edge between them.');
+            return;
+        }
+
+        // Find the existing edge between these nodes
+        const existingEdges = edgesData.get({
+            filter: function(e) {
+                return (e.from === fromId && e.to === toId) ||
+                       (e.from === toId && e.to === fromId);
+            }
+        });
+
+        if (!existingEdges.length) {
+            alert('No edge found between the selected nodes. Use "Add Edge" to create one.');
+            return;
+        }
+
+        // Update the edge attributes
+        const edge = existingEdges[0];
+        const newAttrs = getEdgeAttrValuesFromUI();
+        edgesData.update({
+            id: edge.id,
+            attributes: newAttrs
+        });
+
+        isDirty = true;
+        applyVisibility();
     });
 
     document.querySelector('#causal-editor #btnDeleteEdge').addEventListener('click', function() {
@@ -1528,12 +2281,16 @@
             edgeFromEl.value = id;
             edgeFromInputEl.value = node.rawLabel || node.label || id;
         }
+
+        // Update node attribute values UI
+        updateNodeAttrValuesUI();
     }
 
     function clearSelectedNodeInUI() {
         selectedNodeId = null;
         selectedNodeIdEl.textContent = 'None';
         if (isolateNodeDisplayEl) isolateNodeDisplayEl.textContent = 'None';
+        updateNodeAttrValuesUI();
     }
 
     function updateViewStateIndicator() {
@@ -1597,6 +2354,10 @@
         nodesData.clear();
         edgesData.clear();
         nodeTypes.clear();
+        nodeAttributes = [];
+        edgeAttributes = [];
+        nodeShapeRules = [];
+        edgeColorRules = [];
         colorIndex = 0;
         viewFilters = { onlyOrphans: false };
 
@@ -1605,31 +2366,56 @@
         // Parse nodes CSV
         if (nodesCSV) {
             const rows = parseCSV(nodesCSV);
-            // Skip header row
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (row.length < 2) continue;
-                const label = row[0];
-                const type = row[1];
-                if (!label) continue;
-
-                // Add type if new
-                if (type && !nodeTypes.has(type)) {
-                    addType(type);
+            if (rows.length < 1) {
+                // Empty file
+            } else {
+                // First row is header: Node, Type, Attr1, Attr2, ...
+                const header = rows[0];
+                // Columns beyond index 1 (Node, Type) are attribute names
+                for (let c = 2; c < header.length; c++) {
+                    const attrName = header[c].trim();
+                    if (attrName && !nodeAttributes.includes(attrName)) {
+                        nodeAttributes.push(attrName);
+                    }
                 }
 
-                const id = slugifyLabel(label);
-                const color = getTypeColor(type || 'Unknown');
-                nodeMap[label] = id;
+                // Data rows
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (row.length < 2) continue;
+                    const label = row[0];
+                    const type = row[1];
+                    if (!label) continue;
 
-                nodesData.add({
-                    id: id,
-                    label: wrapLabel(label),
-                    rawLabel: label,
-                    type: type || 'Unknown',
-                    baseColor: color,
-                    color: color
-                });
+                    // Add type if new
+                    if (type && !nodeTypes.has(type)) {
+                        addType(type);
+                    }
+
+                    // Build attributes object from columns
+                    const attrs = {};
+                    for (let c = 2; c < header.length; c++) {
+                        const attrName = header[c].trim();
+                        const attrValue = (row[c] || '').trim();
+                        if (attrName && attrValue) {
+                            attrs[attrName] = attrValue;
+                        }
+                    }
+
+                    const id = slugifyLabel(label);
+                    const color = getTypeColor(type || 'Unknown');
+                    nodeMap[label] = id;
+
+                    nodesData.add({
+                        id: id,
+                        label: wrapLabel(label),
+                        rawLabel: label,
+                        type: type || 'Unknown',
+                        attributes: attrs,
+                        baseColor: color,
+                        color: color
+                    });
+                }
             }
         }
 
@@ -1642,67 +2428,100 @@
         // Parse edges CSV
         if (edgesCSV) {
             const rows = parseCSV(edgesCSV);
-            // Skip header row
-            for (let i = 1; i < rows.length; i++) {
-                const row = rows[i];
-                if (row.length < 2) continue;
-                const label1 = row[0];
-                const label2 = row[1];
-                if (!label1 || !label2) continue;
-
-                let id1 = nodeMap[label1];
-                let id2 = nodeMap[label2];
-
-                // Create nodes if they don't exist (from edges file)
-                if (!id1) {
-                    id1 = slugifyLabel(label1);
-                    nodeMap[label1] = id1;
-                    if (!nodeTypes.has('Unknown')) {
-                        addType('Unknown', '#999999');
+            if (rows.length < 1) {
+                // Empty file
+            } else {
+                // First row is header: Node 1, Node 2, Attr1, Attr2, ...
+                const header = rows[0];
+                // Columns beyond index 1 (Node 1, Node 2) are attribute names
+                for (let c = 2; c < header.length; c++) {
+                    const attrName = header[c].trim();
+                    if (attrName && !edgeAttributes.includes(attrName)) {
+                        edgeAttributes.push(attrName);
                     }
-                    nodesData.add({
-                        id: id1,
-                        label: wrapLabel(label1),
-                        rawLabel: label1,
-                        type: 'Unknown',
-                        baseColor: '#999999',
-                        color: '#999999'
-                    });
-                }
-                if (!id2) {
-                    id2 = slugifyLabel(label2);
-                    nodeMap[label2] = id2;
-                    if (!nodeTypes.has('Unknown')) {
-                        addType('Unknown', '#999999');
-                    }
-                    nodesData.add({
-                        id: id2,
-                        label: wrapLabel(label2),
-                        rawLabel: label2,
-                        type: 'Unknown',
-                        baseColor: '#999999',
-                        color: '#999999'
-                    });
                 }
 
-                // Check if edge already exists
-                const existing = edgesData.get({
-                    filter: function(e) {
-                        return (e.from === id1 && e.to === id2) ||
-                               (e.from === id2 && e.to === id1);
+                // Data rows
+                for (let i = 1; i < rows.length; i++) {
+                    const row = rows[i];
+                    if (row.length < 2) continue;
+                    const label1 = row[0];
+                    const label2 = row[1];
+                    if (!label1 || !label2) continue;
+
+                    let id1 = nodeMap[label1];
+                    let id2 = nodeMap[label2];
+
+                    // Create nodes if they don't exist (from edges file)
+                    if (!id1) {
+                        id1 = slugifyLabel(label1);
+                        nodeMap[label1] = id1;
+                        if (!nodeTypes.has('Unknown')) {
+                            addType('Unknown', '#999999');
+                        }
+                        nodesData.add({
+                            id: id1,
+                            label: wrapLabel(label1),
+                            rawLabel: label1,
+                            type: 'Unknown',
+                            attributes: {},
+                            baseColor: '#999999',
+                            color: '#999999'
+                        });
                     }
-                });
-                if (!existing.length) {
-                    edgesData.add({ from: id1, to: id2, color: '#666666' });
+                    if (!id2) {
+                        id2 = slugifyLabel(label2);
+                        nodeMap[label2] = id2;
+                        if (!nodeTypes.has('Unknown')) {
+                            addType('Unknown', '#999999');
+                        }
+                        nodesData.add({
+                            id: id2,
+                            label: wrapLabel(label2),
+                            rawLabel: label2,
+                            type: 'Unknown',
+                            attributes: {},
+                            baseColor: '#999999',
+                            color: '#999999'
+                        });
+                    }
+
+                    // Build edge attributes object from columns
+                    const attrs = {};
+                    for (let c = 2; c < header.length; c++) {
+                        const attrName = header[c].trim();
+                        const attrValue = (row[c] || '').trim();
+                        if (attrName && attrValue) {
+                            attrs[attrName] = attrValue;
+                        }
+                    }
+
+                    // Check if edge already exists
+                    const existing = edgesData.get({
+                        filter: function(e) {
+                            return (e.from === id1 && e.to === id2) ||
+                                   (e.from === id2 && e.to === id1);
+                        }
+                    });
+                    if (!existing.length) {
+                        edgesData.add({ from: id1, to: id2, attributes: attrs, color: '#666666' });
+                    }
                 }
             }
         }
 
         isDirty = true;
         selectedNodeId = null;
+        selectedEdgeId = null;
         clearSelectedNodeInUI();
         refreshNodeSelects();
         updateTypeUI();
+        updateAttributeListUI();
+        updateNodeAttrValuesUI();
+        updateEdgeAttrValuesUI();
+        updateStyleRuleAttributeDropdowns();
+        updateNodeShapeRulesUI();
+        updateEdgeColorRulesUI();
 
         isIsolated = false;
         isolateSet = null;
@@ -1714,7 +2533,10 @@
         const nodeCount = nodesData.get().length;
         const edgeCount = edgesData.get().length;
         const typeCount = nodeTypes.size;
-        alert('Import complete: ' + nodeCount + ' nodes, ' + edgeCount + ' edges, ' + typeCount + ' types.');
+        const nodeAttrCount = nodeAttributes.length;
+        const edgeAttrCount = edgeAttributes.length;
+        alert('Import complete: ' + nodeCount + ' nodes, ' + edgeCount + ' edges, ' + typeCount + ' types.\n' +
+              'Node attributes: ' + nodeAttrCount + ', Edge attributes: ' + edgeAttrCount);
     }
 
     function downloadCSV(rows, filename) {
@@ -1751,6 +2573,12 @@
         sortMethodEl.value = 'alpha';
         currentSortMethod = 'alpha';
         updateTypeUI();
+        updateAttributeListUI();
+        updateNodeAttrValuesUI();
+        updateEdgeAttrValuesUI();
+        updateStyleRuleAttributeDropdowns();
+        updateNodeShapeRulesUI();
+        updateEdgeColorRulesUI();
         applyVisibility();
     });
 
